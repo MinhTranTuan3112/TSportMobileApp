@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'TSport',
       theme: ThemeData(
         fontFamily: 'BeVietnamPro',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
       home: const HomePage(),

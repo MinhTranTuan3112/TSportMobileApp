@@ -9,16 +9,18 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       items:  [
-        const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang Chủ'),
+        const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
         BottomNavigationBarItem(
           icon: SvgPicture.asset('assets/icons/shirt-svgrepo-com.svg'),
-          label: 'Áo đấu',
+          label: 'Áo thể thao',
         ),
         const BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart),
           label: 'Giỏ hàng',
         ),
+        const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Cá nhân')
       ],
     );
   }
