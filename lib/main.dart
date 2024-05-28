@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tsport_mobile_app/pages/home_page.dart';
+import 'package:tsport_mobile_app/widgets/bottom_navigation_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const BottomNavigation(),
     );
   }
 }
