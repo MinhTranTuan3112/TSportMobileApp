@@ -37,7 +37,7 @@ class MainAppBar extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.arrow_left),
+              child: const Icon(Icons.keyboard_arrow_left_rounded, size: 30),
             ),
           ),
           Align(
