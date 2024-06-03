@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
+import 'package:intl/intl.dart';
+
+class BasicShirt {
+  final String name;
+  final String imageUrl;
+  final double price;
+
+  BasicShirt({required this.name, required this.imageUrl, required this.price});
+}
 
 class ShirtsScreen extends StatefulWidget {
   const ShirtsScreen({super.key});
@@ -7,26 +17,125 @@ class ShirtsScreen extends StatefulWidget {
   State<ShirtsScreen> createState() => _ShirtsScreenState();
 }
 
+String formatPrice(double price) {
+  final formatter = NumberFormat('#,###', 'de_DE');
+  return formatter.format(price);
+}
+
+class ShirtCard extends StatelessWidget {
+  final BasicShirt shirt;
+  const ShirtCard({super.key, required this.shirt});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        
+        children: [
+          Image.network(shirt.imageUrl),
+          const SizedBox(height: 10),
+          Text(
+            shirt.name,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text('${formatPrice(shirt.price)} VNĐ')
+        ],
+      ),
+    );
+  }
+}
+
 class _ShirtsScreenState extends State<ShirtsScreen> {
   String sortOrder = "Giá: cao - thấp";
+  var shirts = <BasicShirt>[
+    BasicShirt(
+        name: 'Áo thi đấu thể thao ĐN',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/hong-nam6745_da517aea17ca4a0491ed4ba8931a6f5a_master.jpg',
+        price: 169000),
+    BasicShirt(
+        name: 'Áo POLO Nam Porada',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/mid06600_6c744f681d1f4a5a8ac7e71bd778620c_master.jpg',
+        price: 149500),
+        BasicShirt(
+        name: 'Áo POLO Nam Porada',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/mid06600_6c744f681d1f4a5a8ac7e71bd778620c_master.jpg',
+        price: 149500),
+        BasicShirt(
+        name: 'Áo POLO Nam Porada',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/mid06600_6c744f681d1f4a5a8ac7e71bd778620c_master.jpg',
+        price: 149500),
+        BasicShirt(
+        name: 'Áo POLO Nam Porada',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/mid06600_6c744f681d1f4a5a8ac7e71bd778620c_master.jpg',
+        price: 149500),
+        BasicShirt(
+        name: 'Áo POLO Nam Porada',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/mid06600_6c744f681d1f4a5a8ac7e71bd778620c_master.jpg',
+        price: 149500),
+        BasicShirt(
+        name: 'Áo POLO Nam Porada',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/mid06600_6c744f681d1f4a5a8ac7e71bd778620c_master.jpg',
+        price: 149500),
+        BasicShirt(
+        name: 'Áo POLO Nam Porada',
+        imageUrl:
+            'https://product.hstatic.net/1000341630/product/mid06600_6c744f681d1f4a5a8ac7e71bd778620c_master.jpg',
+        price: 149500)
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         categoryBar(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            filterOption(),
-            sortOption(context),
-            const Padding(
-              padding: EdgeInsets.only(right: 5),
-              child: Row(
-                children: [Icon(Icons.dashboard)],
-              ),
-            )
-          ],
+        const SizedBox(
+          height: 10,
+        ),
+        filterRow(context),
+        shirtsView(),
+        
+      ],
+    );
+  }
+
+  Expanded shirtsView() {
+    return Expanded(
+        child: GridView.builder(
+          padding: const EdgeInsets.all(10.0),
+          itemCount: shirts.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 2 / 3,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10),
+          itemBuilder: (ctx, i) => ShirtCard(shirt: shirts[i]),
+        ),
+      );
+  }
+
+  Row filterRow(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        filterOption(),
+        sortOption(context),
+        const Padding(
+          padding: EdgeInsets.only(right: 5),
+          child: Row(
+            children: [Icon(Icons.dashboard)],
+          ),
         )
       ],
     );
