@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import 'package:tsport_mobile_app/screens/filter_screen.dart';
 
 class BasicShirt {
   final String name;
@@ -141,11 +142,17 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
     );
   }
 
-  Padding filterOption() {
-    return const Padding(
-      padding: EdgeInsets.only(left: 5),
-      child: Row(
-        children: [Icon(Icons.filter_alt), SizedBox(width: 3), Text('Bộ lọc')],
+  GestureDetector filterOption() {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(context, 
+        MaterialPageRoute(builder: (context) => const FilterScreen()))
+      },
+      child: const Padding(
+        padding: EdgeInsets.only(left: 5),
+        child: Row(
+          children: [Icon(Icons.filter_alt), SizedBox(width: 3), Text('Bộ lọc')],
+        ),
       ),
     );
   }
