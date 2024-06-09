@@ -1,7 +1,8 @@
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
-import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb; // Import kIsWeb
+// import 'dart:io' show Platform;
 
 
 class CustomClient extends http.BaseClient {
@@ -10,7 +11,7 @@ class CustomClient extends http.BaseClient {
   final String baseUrl;
 
    CustomClient(this.headers)
-      : baseUrl = Platform.isAndroid ? "http://192.168.100.4:8080/api" : "http://localhost:8080/api";
+      : baseUrl = kIsWeb ? "http://localhost:8080/api" : "http://192.168.100.4:8080/api";
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {

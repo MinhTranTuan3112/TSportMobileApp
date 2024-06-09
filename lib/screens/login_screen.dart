@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tsport_mobile_app/services/auth_service.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,30 +29,54 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Đăng nhập',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Đăng nhập',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              emailTextField(emailController),
-              const SizedBox(height: 10),
-              passwordTextField(passwordController),
-              const SizedBox(height: 20),
-              forgotPasswordLink(),
-              const SizedBox(height: 20),
-              loginButton()
-            ],
+                emailTextField(emailController),
+                const SizedBox(height: 10),
+                passwordTextField(passwordController),
+                const SizedBox(height: 20),
+                forgotPasswordLink(),
+                const SizedBox(height: 20),
+                loginButton(),
+                const SizedBox(height: 20),
+                const Text('Hoặc đăng nhập bằng'),
+                googleLoginButton(),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Container googleLoginButton() {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      alignment: Alignment.bottomCenter,
+      child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            padding:
+                const EdgeInsets.only(top: 27, bottom: 27, left: 27, right: 27),
+          ),
+          child: SizedBox(
+              height: 20,
+              width: 20,
+              child: SvgPicture.asset('assets/icons/google.svg'))),
     );
   }
 
@@ -80,12 +108,24 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> callLogin() async {
     var email = emailController.text;
     var password = passwordController.text;
-
-    var response = await AuthService().callLogin(email, password);
+    var authService = AuthService();
+    var response = await authService.callLogin(email, password);
 
     var message = "Sai email hoặc mật khẩu";
     if (response.statusCode == 201) {
-      message = "Đăng nhập thành công";
+      var responseBody = jsonDecode(response.body);
+
+      var token = responseBody['access-token'];
+
+      await authService.saveAccessToken(token);
+
+      // message = "Đăng nhập thành công";
+
+      // Pop the current screen off the stack
+      if (mounted) {
+        Navigator.of(context).pop();
+        return;
+      }
     }
 
     if (mounted) {
@@ -112,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
               await callLogin();
-            } 
+            }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
@@ -157,7 +197,6 @@ class _LoginScreenState extends State<LoginScreen> {
           if (value == null || value.isEmpty) {
             return "Mật khẩu không được để trống";
           }
-          
 
           return null;
         },

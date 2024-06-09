@@ -8,7 +8,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text('Đăng nhập để mua hàng ngay với TSport'),
+        const Text('Đăng nhập để mua hàng ngay với TSport', style: 
+        TextStyle(
+          fontWeight: FontWeight.bold,
+          
+        ),),
         ElevatedButton(
             onPressed: () => {
                   Navigator.push(
