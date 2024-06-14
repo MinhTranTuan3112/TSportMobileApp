@@ -1,9 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:tsport_mobile_app/main.dart';
+import 'package:tsport_mobile_app/screens/signup_screen.dart';
 import 'package:tsport_mobile_app/services/auth_service.dart';
-// ignore: depend_on_referenced_packages
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tsport_mobile_app/widgets/email_text_field.dart';
+import 'package:tsport_mobile_app/widgets/google_login_button.dart';
+import 'package:tsport_mobile_app/widgets/password_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -43,16 +44,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                 ),
-                emailTextField(emailController),
+                // emailTextField(emailController),
+                EmailTextField(emailController: emailController),
                 const SizedBox(height: 10),
-                passwordTextField(passwordController),
+                PasswordTextField(passwordController: passwordController),
                 const SizedBox(height: 20),
                 forgotPasswordLink(),
                 const SizedBox(height: 20),
                 loginButton(),
                 const SizedBox(height: 20),
                 const Text('Hoặc đăng nhập bằng'),
-                googleLoginButton(),
+                const GoogleLoginButton(),
+                const SizedBox(height: 20),
+                const Text('Chưa có tài khoản?'),
+                const SizedBox(height: 10),
+                signUpButton()
               ],
             ),
           ),
@@ -61,23 +67,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Container googleLoginButton() {
-    return Container(
-      margin: const EdgeInsets.only(top: 30),
-      alignment: Alignment.bottomCenter,
-      child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding:
-                const EdgeInsets.only(top: 27, bottom: 27, left: 27, right: 27),
-          ),
-          child: SizedBox(
-              height: 20,
-              width: 20,
-              child: SvgPicture.asset('assets/icons/google.svg'))),
-    );
+  Widget signUpButton() {
+    return SizedBox(
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SignupScreen()));
+            },
+            child: const Text(
+              'Đăng ký ngay',
+              style: TextStyle(color: Colors.white),
+            )));
   }
 
   Align forgotPasswordLink() {
@@ -109,39 +112,23 @@ class _LoginScreenState extends State<LoginScreen> {
     var email = emailController.text;
     var password = passwordController.text;
     var authService = AuthService();
-    var response = await authService.callLogin(email, password);
+    var response = await authService.callSupabaseLogin(email, password);
 
-    var message = "Sai email hoặc mật khẩu";
-    if (response.statusCode == 201) {
-      var responseBody = jsonDecode(response.body);
+    if (response.user != null) {
+      final session = response.session;
+      final accessToken = session?.accessToken;
 
-      var token = responseBody['access-token'];
-
-      await authService.saveAccessToken(token);
-
-      // message = "Đăng nhập thành công";
-
-      // Pop the current screen off the stack
-      if (mounted) {
-        Navigator.of(context).pop();
-        return;
-      }
+      await authService.saveAccessToken(accessToken);
     }
 
     if (mounted) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Thông báo'),
-              content: Text("$message + ${response.statusCode}"),
-              actions: [
-                TextButton(
-                    onPressed: () => {Navigator.of(context).pop()},
-                    child: const Text('Ok'))
-              ],
-            );
-          });
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                (const MyApp())), // replace 'YourApp' with your main widget that includes the BottomNavigationBar
+        (Route<dynamic> route) => false,
+      );
     }
   }
 
@@ -164,83 +151,6 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           )),
-    );
-  }
-
-  Container passwordTextField(TextEditingController passwordController) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      padding: const EdgeInsets.only(top: 5, bottom: 5),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3))
-          ]),
-      child: TextFormField(
-        controller: passwordController,
-        decoration: const InputDecoration(
-          labelText: 'Mật khẩu',
-          labelStyle: TextStyle(color: Colors.grey),
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide.none),
-        ),
-        obscureText: true,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Mật khẩu không được để trống";
-          }
-
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget emailTextField(TextEditingController emailController) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      padding: const EdgeInsets.only(top: 5, bottom: 5),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3))
-          ]),
-      child: TextFormField(
-        controller: emailController,
-        decoration: const InputDecoration(
-          labelText: 'Email',
-          labelStyle: TextStyle(color: Colors.grey),
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide.none),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Email không được để trống";
-          }
-
-          if (!value.contains('@')) {
-            return "Email không hợp lệ";
-          }
-
-          return null;
-        },
-      ),
     );
   }
 }

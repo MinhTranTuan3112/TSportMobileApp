@@ -23,6 +23,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
     ProfileScreen()
   ];
 
+  void selectHome() {
+    setState(() {
+      _selectedIndex = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
