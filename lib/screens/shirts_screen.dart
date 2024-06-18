@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:tsport_mobile_app/screens/filter_screen.dart';
+import 'package:tsport_mobile_app/screens/shirt_details_screen.dart';
 
 class BasicShirt {
   final String name;
@@ -54,74 +55,78 @@ class _ShirtCardState extends State<ShirtCard> {
     return Card(
       child: GestureDetector(
         onTap: () => {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return StatefulBuilder(
-                    builder: (context, setState) => Container(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            children: [
-                              const Text('Chọn size', style: 
-                              TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                child: GridView.count(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 2,
-                                  // // mainAxisSpacing: 2,
-                                  childAspectRatio: 3 / 1,
-                                  children: sizes.map((String size) {
-                                    return SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.3,
-                                      child: ChoiceChip(
-                                        visualDensity: const VisualDensity(horizontal: 0.0, vertical: -4), // Adjust the size
-                                        label: Text(size),
-                                        selected: isSelected[size] ?? false,
-                                        selectedColor: Colors.red,
-                                        onSelected: (bool selected) {
-                                          setState(() {
-                                            isSelected[size] = selected;
-                                          });
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(1))),
-                                child: ElevatedButton(
-                                  onPressed: () => {},
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red,
-                                      minimumSize: const Size(double.infinity, 40), // Set the height of the button
-                                      ),
-                                  child: const Text(
-                                    "THÊM VÀO GIỎ HÀNG",
-                                    style: TextStyle(
-                              
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ));
-              })
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ShirtDetailsScreen()))
+          // showModalBottomSheet(
+          //     context: context,
+          //     builder: (context) {
+          //       return StatefulBuilder(
+          //           builder: (context, setState) => Container(
+          //                 padding: const EdgeInsets.all(10),
+          //                 child: Column(
+          //                   children: [
+          //                     const Text('Chọn size', style:
+          //                     TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+          //                     const SizedBox(
+          //                       height: 10,
+          //                     ),
+          //                     SizedBox(
+          //                       height:
+          //                           MediaQuery.of(context).size.height * 0.4,
+          //                       child: GridView.count(
+          //                         crossAxisCount: 3,
+          //                         crossAxisSpacing: 2,
+          //                         // // mainAxisSpacing: 2,
+          //                         childAspectRatio: 3 / 1,
+          //                         children: sizes.map((String size) {
+          //                           return SizedBox(
+          //                             width: MediaQuery.of(context).size.width *
+          //                                 0.3,
+          //                             child: ChoiceChip(
+          //                               visualDensity: const VisualDensity(horizontal: 0.0, vertical: -4), // Adjust the size
+          //                               label: Text(size),
+          //                               selected: isSelected[size] ?? false,
+          //                               selectedColor: Colors.red,
+          //                               onSelected: (bool selected) {
+          //                                 setState(() {
+          //                                   isSelected[size] = selected;
+          //                                 });
+          //                               },
+          //                               shape: RoundedRectangleBorder(
+          //                                 borderRadius:
+          //                                     BorderRadius.circular(10),
+          //                               ),
+          //                             ),
+          //                           );
+          //                         }).toList(),
+          //                       ),
+          //                     ),
+          //                     Container(
+          //                       width: MediaQuery.of(context).size.width * 0.9,
+          //                       decoration: const BoxDecoration(
+          //                           borderRadius:
+          //                               BorderRadius.all(Radius.circular(1))),
+          //                       child: ElevatedButton(
+          //                         onPressed: () => {},
+          //                         style: ElevatedButton.styleFrom(
+          //                             backgroundColor: Colors.red,
+          //                             minimumSize: const Size(double.infinity, 40), // Set the height of the button
+          //                             ),
+          //                         child: const Text(
+          //                           "THÊM VÀO GIỎ HÀNG",
+          //                           style: TextStyle(
+
+          //                             color: Colors.white,
+          //                           ),
+          //                         ),
+          //                       ),
+          //                     )
+          //                   ],
+          //                 ),
+          //               ));
+          //     })
         },
         child: Column(
           children: [
