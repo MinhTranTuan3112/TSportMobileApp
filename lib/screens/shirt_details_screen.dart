@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tsport_mobile_app/widgets/color_dropdown_button.dart';
 import 'package:tsport_mobile_app/widgets/size_dropdown_button.dart';
 

@@ -33,8 +33,31 @@ class _FilterScreenState extends State<FilterScreen> {
         title: const Text('Bộ lọc'),
       ),
       body: Column(
-        children: [priceSlider(), sizeOption()],
+        children: [
+          priceSlider(),
+          sizeOption(),
+          const SizedBox(height: 20),
+          applyButton()
+        ],
       ),
+    );
+  }
+
+  Widget applyButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+          ),
+          child: const Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: Text(
+              'Áp dụng',
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          )),
     );
   }
 

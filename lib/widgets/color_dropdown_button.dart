@@ -46,6 +46,5 @@ class _ColorDropdownButtonState extends State<ColorDropdownButton> {
         ),
       ),
     );
-    ;
   }
 }
