@@ -22,10 +22,24 @@ class ShirtService {
     return response;
   }
 
-  Future<List<ShirtItem>> fetchShirts(int pageKey, int pageSize) async {
+  Future<List<ShirtItem>> fetchShirts(
+      int pageKey, int pageSize, List<String> sizes) async {
     final client = http.Client();
 
-    final response = await client.get(Uri.parse('http://localhost:8080/api/shirts?pageNumber=$pageKey&pageSize=$pageSize'));
+    var url =
+        'http://localhost:8080/api/shirts?pageNumber=$pageKey&pageSize=$pageSize';
+
+    if (sizes.isNotEmpty) {
+      url += '&sizes=';
+      for (int i = 0; i < sizes.length; ++i) {
+        url += sizes[i].toString();
+        if (i != sizes.length - 1) {
+          url += '&sizes=';
+        }
+      }
+    }
+
+    final response = await client.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);

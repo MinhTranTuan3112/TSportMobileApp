@@ -29,6 +29,18 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
       PagingController(firstPageKey: 1);
 
   static const _pageSize = 4;
+  List<String> _selectedSizes = [];
+
+  Future _showFilterScreenAndFetchSizes() async {
+    final selectedSizes = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const FilterScreen()),
+    );
+    if (selectedSizes != null) {
+      _selectedSizes = selectedSizes;
+      _pagingController.refresh(); // Refresh the list with the new filter
+    }
+  }
 
   @override
   void initState() {
@@ -48,7 +60,8 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
     try {
       // Replace this with your actual data fetching logic
       final shirtService = ShirtService();
-      final newItems = await shirtService.fetchShirts(pageKey, _pageSize);
+      final newItems =
+          await shirtService.fetchShirts(pageKey, _pageSize, _selectedSizes);
 
       final isLastPage = newItems.length < _pageSize;
 
@@ -120,9 +133,8 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
 
   GestureDetector filterOption() {
     return GestureDetector(
-      onTap: () => {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const FilterScreen()))
+      onTap: () async {
+        await _showFilterScreenAndFetchSizes();
       },
       child: const Padding(
         padding: EdgeInsets.only(left: 5),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsport_mobile_app/models/shirt_filter_data.dart';
 import 'package:tsport_mobile_app/utils/price_utils.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -47,7 +48,14 @@ class _FilterScreenState extends State<FilterScreen> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            var selectedSizes = isSelected.entries
+                .where((e) => e.value == true)
+                .map((e) => e.key)
+                .toList();
+
+            Navigator.pop(context, selectedSizes);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
           ),
