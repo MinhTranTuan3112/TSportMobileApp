@@ -22,6 +22,9 @@ class ShirtCard extends StatelessWidget {
         child: Column(
           children: [
             Image.network(
+              height: 200,
+              width: 200,
+              fit: BoxFit.cover,
               shirt.images.firstWhereOrNull((_) => true)?.url ??
                   'https://onlinetools.com/images/examples-onlineimagetools/empty-translucent-image.png',
               errorBuilder: (BuildContext context, Object exception,

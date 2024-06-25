@@ -23,11 +23,10 @@ class ShirtService {
   }
 
   Future<List<ShirtItem>> fetchShirts(
-      int pageKey, int pageSize, List<String> sizes) async {
-    final client = http.Client();
+      int pageKey, int pageSize, List<String> sizes, {String sortOption = ""}) async {
+    final client = CustomClient({});
 
-    var url =
-        'http://localhost:8080/api/shirts?pageNumber=$pageKey&pageSize=$pageSize';
+    var url = '/shirts?pageNumber=$pageKey&pageSize=$pageSize';
 
     if (sizes.isNotEmpty) {
       url += '&sizes=';
@@ -37,6 +36,20 @@ class ShirtService {
           url += '&sizes=';
         }
       }
+    }
+
+    switch (sortOption.toLowerCase()) {
+      case "giá: cao - thấp":
+        url += "&sortColumn=discountPrice&orderByDesc=true";
+        break;
+      case "giá: thấp - cao":
+        url += "&sortColumn=discountPrice&orderByDesc=false";
+        break;
+      case "mới nhất trước":
+        url += "&sortColumn=createdDate&orderByDesc=true";
+        break;
+      default:
+        break;
     }
 
     final response = await client.get(Uri.parse(url));

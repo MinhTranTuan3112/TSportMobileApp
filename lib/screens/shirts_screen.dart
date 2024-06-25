@@ -23,7 +23,7 @@ String formatPrice(double price) {
 }
 
 class _ShirtsScreenState extends State<ShirtsScreen> {
-  String sortOrder = "Giá: cao - thấp";
+  String sortOption = "Giá: cao - thấp";
 
   final PagingController<int, ShirtItem> _pagingController =
       PagingController(firstPageKey: 1);
@@ -60,8 +60,9 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
     try {
       // Replace this with your actual data fetching logic
       final shirtService = ShirtService();
-      final newItems =
-          await shirtService.fetchShirts(pageKey, _pageSize, _selectedSizes);
+      final newItems = await shirtService.fetchShirts(
+          pageKey, _pageSize, _selectedSizes,
+          sortOption: sortOption);
 
       final isLastPage = newItems.length < _pageSize;
 
@@ -120,7 +121,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         filterOption(),
-        sortOption(context),
+        _sortOption(context),
         const Padding(
           padding: EdgeInsets.only(right: 5),
           child: Row(
@@ -149,7 +150,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
     );
   }
 
-  GestureDetector sortOption(BuildContext context) {
+  GestureDetector _sortOption(BuildContext context) {
     return GestureDetector(
       onTap: () => {
         showModalBottomSheet(
@@ -170,11 +171,12 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
                           title: const Text('Giá: cao - thấp'),
                           onTap: () => {
                             setState(() {
-                              sortOrder = 'Giá: cao - thấp';
+                              sortOption = 'Giá: cao - thấp';
+                              _pagingController.refresh();
                             }),
                             Navigator.pop(context)
                           },
-                          selected: sortOrder == 'Giá: cao - thấp',
+                          selected: sortOption == 'Giá: cao - thấp',
                           selectedTileColor: Colors.red,
                           selectedColor: Colors.white,
                         ),
@@ -182,22 +184,24 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
                             title: const Text('Giá: thấp - cao'),
                             onTap: () => {
                                   setState(() {
-                                    sortOrder = 'Giá: thấp - cao';
+                                    sortOption = 'Giá: thấp - cao';
+                                    _pagingController.refresh();
                                   }),
                                   Navigator.pop(context)
                                 },
-                            selected: sortOrder == 'Giá: thấp - cao',
+                            selected: sortOption == 'Giá: thấp - cao',
                             selectedTileColor: Colors.red,
                             selectedColor: Colors.white),
                         ListTile(
                             title: const Text('Mới nhất trước'),
                             onTap: () => {
                                   setState(() {
-                                    sortOrder = 'Mới nhất trước';
+                                    sortOption = 'Mới nhất trước';
+                                    _pagingController.refresh();
                                   }),
                                   Navigator.pop(context)
                                 },
-                            selected: sortOrder == 'Mới nhất trước',
+                            selected: sortOption == 'Mới nhất trước',
                             selectedTileColor: Colors.red,
                             selectedColor: Colors.white),
                       ],
@@ -211,7 +215,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
         children: [
           const Icon(Icons.swap_vert),
           const SizedBox(width: 3),
-          Text("Sắp xếp theo: $sortOrder")
+          Text("Sắp xếp theo: $sortOption")
         ],
       ),
     );
