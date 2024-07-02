@@ -17,7 +17,7 @@ class ShirtCard extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const ShirtDetailsScreen()))
+                  builder: (context) => ShirtDetailsScreen(shirtId: shirt.id)))
         },
         child: Column(
           children: [

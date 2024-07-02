@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:http/src/response.dart';
 import 'package:tsport_mobile_app/models/pagedresult.dart';
 import 'package:tsport_mobile_app/models/shirt.dart';
+import 'package:tsport_mobile_app/models/shirt_details.dart';
 import 'package:tsport_mobile_app/utils/custom_client.dart';
 import 'dart:convert'; // Import json decoder
 // ignore: depend_on_referenced_packages
@@ -23,7 +24,8 @@ class ShirtService {
   }
 
   Future<List<ShirtItem>> fetchShirts(
-      int pageKey, int pageSize, List<String> sizes, {String sortOption = ""}) async {
+      int pageKey, int pageSize, List<String> sizes,
+      {String sortOption = ""}) async {
     final client = CustomClient({});
 
     var url = '/shirts?pageNumber=$pageKey&pageSize=$pageSize';
@@ -69,5 +71,27 @@ class ShirtService {
     client.close();
 
     throw Exception('Failed to load shirts');
+  }
+
+  Future<ShirtDetails> fetchShirtDetailsById(int shirtId) async {
+    final client = CustomClient({});
+
+    final response = await client.get(Uri.parse('/shirts/$shirtId'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+
+      final shirtDetails = ShirtDetails.fromJson(jsonResponse);
+
+      client.close();
+      return shirtDetails;
+    } else if (response.statusCode == 404) {
+      client.close();
+      throw Exception('Shirt not found');
+    }
+
+    client.close();
+
+    throw Exception('Failed to load shirt details');
   }
 }
