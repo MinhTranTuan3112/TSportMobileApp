@@ -111,4 +111,11 @@ class AuthService {
 
     return (account?.role != null && account?.role == role);
   }
+
+  Future<bool> checkAuthenticated() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    bool isAuthenticated = (user != null);
+
+    return isAuthenticated;
+  }
 }

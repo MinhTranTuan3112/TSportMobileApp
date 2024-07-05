@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:tsport_mobile_app/models/shirt_details.dart';
+import 'package:tsport_mobile_app/screens/login_screen.dart';
+import 'package:tsport_mobile_app/services/auth_service.dart';
+import 'package:tsport_mobile_app/services/order_service.dart';
 import 'package:tsport_mobile_app/services/shirt_service.dart';
 import 'package:tsport_mobile_app/widgets/color_dropdown_button.dart';
 import 'package:tsport_mobile_app/widgets/size_dropdown_button.dart';
@@ -23,6 +27,7 @@ class ShirtDetailsScreen extends StatefulWidget {
 class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
   int _current = 0;
   ShirtDetails? _shirt;
+  final TextEditingController _quantityController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +38,12 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
       body: mainContent(),
       bottomNavigationBar: addToCartButton(),
     );
+  }
+
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,7 +64,63 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 300,
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Số lượng',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _quantityController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter
+                              .digitsOnly, // Only numbers can be entered
+                        ],
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Nhập số lượng',
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              bool isAuthenticated =
+                                  await AuthService().checkAuthenticated();
+                              if (!isAuthenticated) {
+                                Navigator.push(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen()));
+                                return;
+                              }
+                              try {
+                                String quantityStr = _quantityController.text;
+                                int quantity = int.tryParse(quantityStr) ?? 1; // Default to 0 if parsing fails
+                                int shirtId = _shirt!.id;
+                                await OrderService().callAddToCart(shirtId, quantity);
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            child: const Text('THÊM VÀO GIỎ HÀNG')),
+                      )
+                    ],
+                  ),
+                );
+              });
+        },
         style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
             foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
@@ -69,14 +136,14 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
       child: Column(
         children: [
           imagesCarousel(),
-          const Row(
-            children: [
-              SizedBox(width: 10),
-              SizeDropdownButton(),
-              SizedBox(width: 10),
-              ColorDropdownButton()
-            ],
-          ),
+          // const Row(
+          //   children: [
+          //     SizedBox(width: 10),
+          //     SizeDropdownButton(),
+          //     SizedBox(width: 10),
+          //     ColorDropdownButton()
+          //   ],
+          // ),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
