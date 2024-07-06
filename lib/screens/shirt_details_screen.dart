@@ -27,6 +27,9 @@ class ShirtDetailsScreen extends StatefulWidget {
 class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
   int _current = 0;
   ShirtDetails? _shirt;
+  final List<String> _sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+// Step 2: Create a variable to hold the currently selected size
+  String? _selectedSize; // Default to 'M' or any size you prefer
   final TextEditingController _quantityController = TextEditingController();
 
   @override
@@ -91,6 +94,35 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          const Text('Size'),
+                          const SizedBox(width: 10),
+                          DropdownButton<String>(
+                            value: _selectedSize,
+                            icon: const Icon(Icons.arrow_downward),
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.red),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.red,
+                            ),
+                            onChanged: (String? newValue) {
+                              // Update the state to reflect the new selected size
+                              setState(() {
+                                _selectedSize = newValue;
+                              });
+                            },
+                            items: _sizes
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                       Center(
                         child: ElevatedButton(
                             onPressed: () async {
@@ -107,9 +139,32 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                               }
                               try {
                                 String quantityStr = _quantityController.text;
-                                int quantity = int.tryParse(quantityStr) ?? 1; // Default to 0 if parsing fails
+                                int quantity = int.tryParse(quantityStr) ??
+                                    1; // Default to 0 if parsing fails
                                 int shirtId = _shirt!.id;
-                                await OrderService().callAddToCart(shirtId, quantity);
+                                await OrderService().callAddToCart(
+                                    shirtId, quantity, _selectedSize!);
+                                // Show success dialog
+                                showDialog(
+                                  // ignore: use_build_context_synchronously
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Thành công'),
+                                      content: const Text(
+                                          'Thêm sản phẩm vào giỏ hàng thành công'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Dismiss the dialog
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               } catch (e) {
                                 print(e);
                               }

@@ -3,7 +3,7 @@ import 'package:tsport_mobile_app/utils/custom_client.dart';
 import 'dart:convert' show jsonDecode, jsonEncode;
 
 class OrderService {
-  Future callAddToCart(int shirtId, int quantity) async {
+  Future callAddToCart(int shirtId, int quantity, String size) async {
     final session = Supabase.instance.client.auth.currentSession;
     var token = session?.accessToken;
     final client = CustomClient({
@@ -16,6 +16,7 @@ class OrderService {
         body: jsonEncode({
           "shirt-id": shirtId,
           "quantity": quantity,
+          "size": size,
         }));
 
     if (response.statusCode != 200) {
