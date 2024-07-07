@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tsport_mobile_app/models/order_in_cart.dart';
 import 'package:tsport_mobile_app/utils/custom_client.dart';
 import 'dart:convert' show jsonDecode, jsonEncode;
 
@@ -24,5 +25,27 @@ class OrderService {
     }
 
     client.close();
+  }
+
+  Future<OrderInCart> fetchCartInfo() async {
+    final session = Supabase.instance.client.auth.currentSession;
+    var token = session?.accessToken;
+    final client = CustomClient({
+      "Authorization": "Bearer $token",
+    });
+
+    final response = await client.get(Uri.parse('/orders/get-cart'));
+
+    if (response.statusCode != 200) {
+      throw Exception("Error fetching cart info");
+    }
+
+    final jsonResponse = await jsonDecode(response.body);
+
+    final orderInCart = OrderInCart.fromJson(jsonResponse);
+
+    client.close();
+
+    return orderInCart;
   }
 }

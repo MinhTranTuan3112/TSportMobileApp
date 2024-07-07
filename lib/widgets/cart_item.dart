@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:tsport_mobile_app/models/order_in_cart.dart';
+// ignore: depend_on_referenced_packages
+import 'package:collection/collection.dart';
 class CartItem extends StatefulWidget {
-  const CartItem({super.key});
+  final OrderDetail orderDetail;
+  const CartItem({super.key, required this.orderDetail});
 
   @override
   State<CartItem> createState() => _CartItemState();
@@ -13,6 +16,7 @@ class _CartItemState extends State<CartItem> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+      // width: MediaQuery.of(context).size.width,
       child: Card(
         elevation: 5,
         child: Row(
@@ -20,39 +24,40 @@ class _CartItemState extends State<CartItem> {
             Image.network(
                 height: 120,
                 width: 120,
-                'https://product.hstatic.net/1000341630/product/hong-nam6745_da517aea17ca4a0491ed4ba8931a6f5a_master.jpg'),
+                widget.orderDetail.shirt.images.firstWhereOrNull((_) => true)?.url ??
+                  'https://onlinetools.com/images/examples-onlineimagetools/empty-translucent-image.png'),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
                 children: [
-                  const Align(
+                  Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Áo đấu...',
-                        style: TextStyle(
+                        widget.orderDetail.shirt.name,
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       )),
-                  const Row(
+                   Row(
                     children: [
                       Row(
                         children: [
-                          Text('Size: '),
+                          const Text('Size: '),
                           Text(
-                            'S',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            widget.orderDetail.size,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           )
                         ],
                       ),
-                      SizedBox(width: 20),
-                      Row(
-                        children: [
-                          Text('Màu sắc: '),
-                          Text(
-                            'Đỏ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      )
+                      // SizedBox(width: 20),
+                      // Row(
+                      //   children: [
+                      //     Text('Màu sắc: '),
+                      //     Text(
+                      //       'Đỏ',
+                      //       style: TextStyle(fontWeight: FontWeight.bold),
+                      //     )
+                      //   ],
+                      // )
                     ],
                   ),
                   const SizedBox(height: 20),
