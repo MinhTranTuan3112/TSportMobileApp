@@ -3,10 +3,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/models/add_to_cart_request.dart';
 import 'package:tsport_mobile_app/models/order_in_cart.dart';
 import 'package:tsport_mobile_app/screens/login_screen.dart';
-import 'package:tsport_mobile_app/services/auth_service.dart';
 import 'package:tsport_mobile_app/services/order_service.dart';
 import 'package:tsport_mobile_app/widgets/cart_item.dart';
-import 'dart:developer' as logger;
+// import 'dart:developer' as logger;
 
 class CartsScreen extends StatefulWidget {
   const CartsScreen({super.key});
@@ -36,12 +35,12 @@ class _CartsScreenState extends State<CartsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final user = Supabase.instance.client.auth.currentUser;
-    // bool isAuthenticated = (user != null);
-    // if (!isAuthenticated && mounted) {
-    //   Navigator.push(context,
-    //       MaterialPageRoute(builder: (context) => const LoginScreen()));
-    // }
+    final user = Supabase.instance.client.auth.currentUser;
+    bool isAuthenticated = (user != null);
+    if (!isAuthenticated && mounted) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
 
     return Align(
       alignment: Alignment.topCenter,

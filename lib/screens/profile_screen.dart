@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/main.dart';
@@ -15,6 +14,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool isHovered = false;
+
   @override
   Widget build(BuildContext context) {
     final user = Supabase.instance.client.auth.currentUser;
@@ -30,45 +31,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text('Chào mừng ${user.email} đến với TSport'),
         const SizedBox(height: 20),
-        ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Xác nhận'),
-                    content: const Text('Xác nhận muốn đăng xuất?'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Hủy'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Đồng ý'),
-                        onPressed: () async {
-                          await AuthService().signOut();
-                          if (mounted) {
-                            Navigator.pushAndRemoveUntil(
-                              // ignore: use_build_context_synchronously
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      (const MyApp())), // replace 'YourApp' with your main widget that includes the BottomNavigationBar
-                              (Route<dynamic> route) => false,
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            child: const Text('Đăng xuất'))
+        signOutButton(),
+        profileSection()
       ],
     );
+  }
+
+  Widget profileSection() {
+    return Column(children: [
+      const Text('Hồ sơ nguời dùng',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+      const SizedBox(height: 20),
+      const Text('abc@gmail.com',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      const SizedBox(height: 20),
+      profileContent()
+    ]);
+  }
+
+  Widget profileContent() {
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          isHovered =
+              true; // You need to define a boolean state variable `isHovered`
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          isHovered = false;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        color: isHovered
+            ? Colors.grey.withOpacity(0.5)
+            : Colors.transparent, // Change background color on hover
+        child: const Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Text('Đơn hàng của tôi',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  Text('5 đơn hàng',
+                      style: TextStyle(color: Colors.grey, fontSize: 15))
+                ],
+              ),
+              Icon(Icons.arrow_forward_ios_rounded, size: 20)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  ElevatedButton signOutButton() {
+    return ElevatedButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Xác nhận'),
+                content: const Text('Xác nhận muốn đăng xuất?'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Hủy'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Đồng ý'),
+                    onPressed: () async {
+                      await AuthService().signOut();
+                      if (mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  (const MyApp())), // replace 'YourApp' with your main widget that includes the BottomNavigationBar
+                          (Route<dynamic> route) => false,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: const Text('Đăng xuất'));
   }
 
   Future performSignout() async {
