@@ -1,7 +1,10 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tsport_mobile_app/models/add_to_cart_request.dart';
 import 'package:tsport_mobile_app/models/order_in_cart.dart';
 import 'package:tsport_mobile_app/utils/custom_client.dart';
 import 'dart:convert' show jsonDecode, jsonEncode;
+// ignore: depend_on_referenced_packages, implementation_imports
+import 'package:http/src/response.dart';
 
 class OrderService {
   Future callAddToCart(int shirtId, int quantity, String size) async {
@@ -47,5 +50,19 @@ class OrderService {
     client.close();
 
     return orderInCart;
+  }
+
+  Future<Response> fetchConfirmOrder(
+      int orderId, List<AddToCartRequest> requests) async {
+    final session = Supabase.instance.client.auth.currentSession;
+    var token = session?.accessToken;
+    final client = CustomClient({
+      "Authorization": "Bearer $token",
+    });
+
+    final response = await client.post(Uri.parse('/orders/$orderId'));
+    client.close();
+
+    return response;
   }
 }

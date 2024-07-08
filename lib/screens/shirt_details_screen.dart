@@ -137,37 +137,36 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                                             const LoginScreen()));
                                 return;
                               }
-                              try {
-                                String quantityStr = _quantityController.text;
-                                int quantity = int.tryParse(quantityStr) ??
-                                    1; // Default to 0 if parsing fails
-                                int shirtId = _shirt!.id;
-                                await OrderService().callAddToCart(
-                                    shirtId, quantity, _selectedSize!);
-                                // Show success dialog
-                                showDialog(
-                                  // ignore: use_build_context_synchronously
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Thành công'),
-                                      content: const Text(
-                                          'Thêm sản phẩm vào giỏ hàng thành công'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Dismiss the dialog
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } catch (e) {
-                                print(e);
+
+                              final bool? confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Xác nhận'),
+                                    content: const Text(
+                                        'Bạn có muốn thêm sản phẩm vào giỏ hàng không?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context)
+                                            .pop(false), // User presses "No"
+                                        child: const Text('Không'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context)
+                                            .pop(true), // User presses "Yes"
+                                        child: const Text('Có'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirmed != null && confirmed == false) {
+                                return;
                               }
+
+                              // ignore: use_build_context_synchronously
+                              await handleAddToCart(context);
                             },
                             child: const Text('THÊM VÀO GIỎ HÀNG')),
                       )
@@ -184,6 +183,37 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
         child: const Text('THÊM VÀO GIỎ HÀNG'),
       ),
     );
+  }
+
+  Future<void> handleAddToCart(BuildContext context) async {
+    try {
+      String quantityStr = _quantityController.text;
+      int quantity =
+          int.tryParse(quantityStr) ?? 1; // Default to 0 if parsing fails
+      int shirtId = _shirt!.id;
+      await OrderService().callAddToCart(shirtId, quantity, _selectedSize!);
+      // Show success dialog
+      showDialog(
+        // ignore: use_build_context_synchronously
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Thành công'),
+            content: const Text('Thêm sản phẩm vào giỏ hàng thành công'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget mainContent() {

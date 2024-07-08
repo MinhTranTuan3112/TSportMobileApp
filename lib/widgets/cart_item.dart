@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tsport_mobile_app/models/order_in_cart.dart';
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
+
 class CartItem extends StatefulWidget {
   final OrderDetail orderDetail;
   const CartItem({super.key, required this.orderDetail});
@@ -24,8 +25,10 @@ class _CartItemState extends State<CartItem> {
             Image.network(
                 height: 120,
                 width: 120,
-                widget.orderDetail.shirt.images.firstWhereOrNull((_) => true)?.url ??
-                  'https://onlinetools.com/images/examples-onlineimagetools/empty-translucent-image.png'),
+                widget.orderDetail.shirt.images
+                        .firstWhereOrNull((_) => true)
+                        ?.url ??
+                    'https://onlinetools.com/images/examples-onlineimagetools/empty-translucent-image.png'),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -37,7 +40,7 @@ class _CartItemState extends State<CartItem> {
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       )),
-                   Row(
+                  Row(
                     children: [
                       Row(
                         children: [
@@ -69,6 +72,7 @@ class _CartItemState extends State<CartItem> {
                           setState(() {
                             if (_quantity > 0) {
                               _quantity--;
+                              widget.orderDetail.quantity--;
                             }
                           });
                         },
@@ -84,7 +88,7 @@ class _CartItemState extends State<CartItem> {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        "$_quantity", // Replace with your quantity variable
+                        "${widget.orderDetail.quantity}", // Replace with your quantity variable
                         style: const TextStyle(fontSize: 20),
                       ),
                       const SizedBox(width: 10),
@@ -92,6 +96,7 @@ class _CartItemState extends State<CartItem> {
                         onPressed: () {
                           setState(() {
                             _quantity++;
+                            widget.orderDetail.quantity++;
                           });
                         },
                         style: ButtonStyle(
