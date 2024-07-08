@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:tsport_mobile_app/screens/order_details_screen.dart';
 
-class OrderCard extends StatelessWidget {
+class OrderCard extends StatefulWidget {
   const OrderCard({
     super.key,
   });
 
+  @override
+  State<OrderCard> createState() => _OrderCardState();
+}
+
+class _OrderCardState extends State<OrderCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,7 +69,12 @@ class OrderCard extends StatelessWidget {
                 width: 2), // Set border color and width here
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const OrderDetailsScreen()),
+          );
+        },
         child: const Text('Xem chi tiết'));
   }
 }
