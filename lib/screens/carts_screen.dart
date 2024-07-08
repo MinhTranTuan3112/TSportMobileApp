@@ -29,19 +29,19 @@ class _CartsScreenState extends State<CartsScreen> {
 
   @override
   void initState() {
-    fetchCartInfo();
     super.initState();
+    final user = Supabase.instance.client.auth.currentUser;
+    bool isAuthenticated = (user != null);
+    if (!isAuthenticated && mounted) {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+    fetchCartInfo();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Supabase.instance.client.auth.currentUser;
-    bool isAuthenticated = (user != null);
-    if (!isAuthenticated && mounted) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
-    }
-
     return Align(
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(
@@ -72,8 +72,8 @@ class _CartsScreenState extends State<CartsScreen> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Thành công'),
-              content:
-                  const Text('Đặt hàng thành công! Cảm ơn bạn đã mua hàng ở TSport!'),
+              content: const Text(
+                  'Đặt hàng thành công! Cảm ơn bạn đã mua hàng ở TSport!'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {

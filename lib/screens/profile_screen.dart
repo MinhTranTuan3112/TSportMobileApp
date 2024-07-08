@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/main.dart';
 import 'package:tsport_mobile_app/screens/home_screen.dart';
 import 'package:tsport_mobile_app/screens/login_screen.dart';
+import 'package:tsport_mobile_app/screens/profile_order_screen.dart';
 import 'package:tsport_mobile_app/services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -50,6 +51,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget profileContent() {
+    return Column(
+      children: [
+        orderSection(),
+      ],
+    );
+  }
+
+  Widget orderSection() {
     return MouseRegion(
       onEnter: (_) {
         setState(() {
@@ -67,22 +76,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: isHovered
             ? Colors.grey.withOpacity(0.5)
             : Colors.transparent, // Change background color on hover
-        child: const Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text('Đơn hàng của tôi',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  Text('5 đơn hàng',
-                      style: TextStyle(color: Colors.grey, fontSize: 15))
-                ],
-              ),
-              Icon(Icons.arrow_forward_ios_rounded, size: 20)
-            ],
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ProfileOrderScreen()),
+            );
+          },
+          child: const Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text('Đơn hàng của tôi',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text('5 đơn hàng',
+                        style: TextStyle(color: Colors.grey, fontSize: 15))
+                  ],
+                ),
+                Icon(Icons.arrow_forward_ios_rounded, size: 20)
+              ],
+            ),
           ),
         ),
       ),
