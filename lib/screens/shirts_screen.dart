@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:tsport_mobile_app/models/shirt.dart';
-import 'package:tsport_mobile_app/models/shirt_filter_data.dart';
 import 'package:tsport_mobile_app/screens/filter_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -44,7 +43,13 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
     // }
 
     final filterData = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const FilterScreen()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => FilterScreen(
+                  selectedSize: _selectedSizes,
+                  selectedStartPrice: _startPrice,
+                  selectedEndPrice: _endPrice,
+                )));
 
     if (filterData != null) {
       _selectedSizes = filterData.sizes;
@@ -95,7 +100,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        categoryBar(),
+        // categoryBar(),
         const SizedBox(
           height: 10,
         ),

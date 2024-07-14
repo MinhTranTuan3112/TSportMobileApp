@@ -3,14 +3,17 @@ import 'package:tsport_mobile_app/models/shirt_filter_data.dart';
 import 'package:tsport_mobile_app/utils/price_utils.dart';
 
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({super.key});
+  final List<String> selectedSize;
+  final double? selectedStartPrice;
+  final double? selectedEndPrice;
+  const FilterScreen({super.key, required this.selectedSize, this.selectedStartPrice, this.selectedEndPrice});
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  RangeValues currentRangeValues = const RangeValues(50000, 500000);
+  RangeValues currentRangeValues = const RangeValues(0, 500000);
   var sizes = [
     'S',
     'M',
@@ -26,6 +29,18 @@ class _FilterScreenState extends State<FilterScreen> {
     'XL': false,
     'XXL': false
   };
+
+  @override
+  void initState() {
+    super.initState();
+    for (var size in widget.selectedSize) {
+      isSelected[size] = true;
+    }
+
+    if (widget.selectedStartPrice != null && widget.selectedEndPrice != null) {
+      currentRangeValues = RangeValues(widget.selectedStartPrice!, widget.selectedEndPrice!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +165,7 @@ class _FilterScreenState extends State<FilterScreen> {
               ]),
           child: RangeSlider(
             values: currentRangeValues,
-            min: 50000,
+            min: 0,
             max: 500000,
             divisions: 10,
             labels: RangeLabels(
