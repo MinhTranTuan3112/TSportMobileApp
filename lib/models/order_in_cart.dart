@@ -45,7 +45,7 @@ class OrderDetail {
   int shirtId;
   String? code;
   String size;
-  int subtotal;
+  double subtotal;
   int quantity;
   String status;
   Shirt shirt;
@@ -66,7 +66,7 @@ class OrderDetail {
         shirtId: json['shirt-id'],
         code: json['code'],
         size: json['size'],
-        subtotal: json['subtotal'],
+        subtotal: (json['subtotal'] as num).toDouble(),
         quantity: json['quantity'],
         status: json['status'],
         shirt: Shirt.fromJson(json['shirt']),

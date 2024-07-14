@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:tsport_mobile_app/models/shirt.dart';
+import 'package:tsport_mobile_app/models/shirt_filter_data.dart';
 import 'package:tsport_mobile_app/screens/filter_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -30,15 +31,26 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
 
   static const _pageSize = 4;
   List<String> _selectedSizes = [];
+  double? _startPrice, _endPrice;
 
   Future _showFilterScreenAndFetchSizes() async {
-    final selectedSizes = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FilterScreen()),
-    );
-    if (selectedSizes != null) {
-      _selectedSizes = selectedSizes;
-      _pagingController.refresh(); // Refresh the list with the new filter
+    // final selectedSizes = await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const FilterScreen()),
+    // );
+    // if (selectedSizes != null) {
+    //   _selectedSizes = selectedSizes;
+    //   _pagingController.refresh(); // Refresh the list with the new filter
+    // }
+
+    final filterData = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const FilterScreen()));
+
+    if (filterData != null) {
+      _selectedSizes = filterData.sizes;
+      _startPrice = filterData.startPrice;
+      _endPrice = filterData.endPrice;
+      _pagingController.refresh();
     }
   }
 
@@ -61,7 +73,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
       // Replace this with your actual data fetching logic
       final shirtService = ShirtService();
       final newItems = await shirtService.fetchShirts(
-          pageKey, _pageSize, _selectedSizes,
+          pageKey, _pageSize, _selectedSizes, _startPrice, _endPrice,
           sortOption: sortOption);
 
       final isLastPage = newItems.length < _pageSize;

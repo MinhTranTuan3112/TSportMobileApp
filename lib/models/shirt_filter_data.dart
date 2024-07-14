@@ -3,6 +3,6 @@ class ShirtFilterData {
   double? startPrice;
   double? endPrice;
 
-  ShirtFilterData({List<String>? sizes})
+  ShirtFilterData({List<String>? sizes, this.startPrice, this.endPrice})
       : sizes = sizes ?? [];
 }

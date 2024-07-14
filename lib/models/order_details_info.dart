@@ -155,7 +155,7 @@ class OrderDetail {
         shirtId: json['shirt-id'],
         code: json['code'],
         size: json['size'],
-        subtotal: json['subtotal'].toDouble(),
+        subtotal: (json['subtotal'] as num).toDouble(),
         quantity: json['quantity'],
         status: json['status'],
         shirt: ShirtItem.fromJson(json['shirt']),

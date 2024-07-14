@@ -35,8 +35,8 @@ class _FilterScreenState extends State<FilterScreen> {
       ),
       body: Column(
         children: [
-          priceSlider(),
-          sizeOption(),
+          priceFilterSection(),
+          sizeFilterSection(),
           const SizedBox(height: 20),
           applyButton()
         ],
@@ -53,8 +53,18 @@ class _FilterScreenState extends State<FilterScreen> {
                 .where((e) => e.value == true)
                 .map((e) => e.key)
                 .toList();
+            var startPrice = currentRangeValues.start.round().toDouble();
+            var endPrice = currentRangeValues.end.round().toDouble();
 
-            Navigator.pop(context, selectedSizes);
+            var filterData = ShirtFilterData(sizes: selectedSizes);
+
+            if (startPrice < endPrice) {
+              filterData.startPrice = startPrice;
+              filterData.endPrice = endPrice;
+            }
+
+            // Navigator.pop(context, selectedSizes);
+            Navigator.pop(context, filterData);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
@@ -69,7 +79,7 @@ class _FilterScreenState extends State<FilterScreen> {
     );
   }
 
-  Column sizeOption() {
+  Widget sizeFilterSection() {
     return Column(
       children: [
         Container(
@@ -116,7 +126,7 @@ class _FilterScreenState extends State<FilterScreen> {
     );
   }
 
-  Column priceSlider() {
+  Column priceFilterSection() {
     return Column(
       children: [
         Container(

@@ -23,8 +23,8 @@ class ShirtService {
     return response;
   }
 
-  Future<List<ShirtItem>> fetchShirts(
-      int pageKey, int pageSize, List<String> sizes,
+  Future<List<ShirtItem>> fetchShirts(int pageKey, int pageSize,
+      List<String> sizes, double? startPrice, double? endPrice,
       {String sortOption = ""}) async {
     final client = CustomClient({});
 
@@ -52,6 +52,14 @@ class ShirtService {
         break;
       default:
         break;
+    }
+
+    if (startPrice != null) {
+      url += '&startPrice=$startPrice';
+    }
+
+    if (endPrice != null) {
+      url += '&endPrice=$endPrice';
     }
 
     final response = await client.get(Uri.parse(url));

@@ -53,15 +53,15 @@ class ShirtDetails {
         modifiedDate: json['modified-date'] != null
             ? DateTime.parse(json['modified-date'])
             : null,
-        modifiedAccountId: json['modified-account-id'],
+        modifiedAccountId: json['modified-account-id'] != null ? int.parse(json['modified-account-id']) : null,
         createdAccount: Account.fromJson(json['created-account']),
         images: List<ShirtImage>.from(
             json['images'].map((x) => ShirtImage.fromJson(x))),
         modifiedAccount: json['modified-account'] != null
             ? Account.fromJson(json['modified-account'])
             : null,
-        orderDetails: List<OrderDetail>.from(
-            json['order-details'].map((x) => OrderDetail.fromJson(x))),
+        orderDetails: json['order-details'] != null && json['order-details'] != [] ? List<OrderDetail>.from(
+            json['order-details'].map((x) => OrderDetail.fromJson(x))) : [],
         seasonPlayer: json['season-player'] != null
             ? SeasonPlayer.fromJson(json['season-player'])
             : null,
@@ -165,7 +165,7 @@ class OrderDetail {
   final int orderId;
   final int shirtId;
   final String code;
-  final int subtotal;
+  final double subtotal;
   final int quantity;
   final String status;
 
@@ -182,7 +182,7 @@ class OrderDetail {
         orderId: json['order-id'],
         shirtId: json['shirt-id'],
         code: json['code'],
-        subtotal: json['subtotal'],
+        subtotal: (json['subtotal'] as num).toDouble(),
         quantity: json['quantity'],
         status: json['status'],
       );
@@ -249,7 +249,7 @@ class Season {
       modifiedDate: json['modified-date'] != null
           ? DateTime.parse(json['modified-date'])
           : null,
-      modifiedAccountId: json['modified-account-id'],
+      modifiedAccountId: json['modified-account-id'] != null ? int.parse(json['modified-account-id']) : null,
       status: json['status'],
       club: Club.fromJson(json['club']),
     );
@@ -331,7 +331,7 @@ class Player {
       modifiedDate: json['modified-date'] != null
           ? DateTime.parse(json['modified-date'])
           : null,
-      modifiedAccountId: json['modified-account-id'],
+      modifiedAccountId: json['modified-account-id'] != null ? int.parse(json['modified-account-id']) : null,
     );
   }
 }
@@ -392,7 +392,7 @@ class ShirtEdition {
       modifiedDate: json['modified-date'] != null
           ? DateTime.parse(json['modified-date'])
           : null, // Handling nullable DateTime
-      modifiedAccountId: json['modified-account-id'],
+      modifiedAccountId: json['modified-account-id'] != null ? int.parse(json['modified-account-id']) : null,
     );
   }
 
