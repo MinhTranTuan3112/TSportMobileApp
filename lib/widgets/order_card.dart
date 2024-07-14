@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tsport_mobile_app/models/account_details.dart';
 import 'package:tsport_mobile_app/screens/order_details_screen.dart';
 
 class OrderCard extends StatefulWidget {
+  final Order order;
   const OrderCard({
     super.key,
+    required this.order,
   });
 
   @override
@@ -30,25 +33,30 @@ class _OrderCardState extends State<OrderCard> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Id: 12345'),
-                Text('05-12-2021', style: TextStyle(color: Colors.grey))
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Số lượng: 3'),
-                Text('Tổng: 300.000 VNĐ', style: TextStyle(color: Colors.red))
+                Text('Id: ${widget.order.id}'),
+                Text('${widget.order.orderDate}',
+                    style: const TextStyle(color: Colors.grey))
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [detailsButton(), const Text('Trạng thái')],
+              children: [
+                Text('Số lượng: ${widget.order.orderDetails.length}'),
+                Text('Tổng: ${widget.order.total}',
+                    style: const TextStyle(color: Colors.red))
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                detailsButton(widget.order.id),
+                Text('Trạng thái: ${widget.order.status}')
+              ],
             )
           ],
         ),
@@ -56,7 +64,7 @@ class _OrderCardState extends State<OrderCard> {
     );
   }
 
-  ElevatedButton detailsButton() {
+  ElevatedButton detailsButton(int orderId) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.black,
@@ -72,7 +80,8 @@ class _OrderCardState extends State<OrderCard> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const OrderDetailsScreen()),
+            MaterialPageRoute(
+                builder: (context) => OrderDetailsScreen(orderId: orderId)),
           );
         },
         child: const Text('Xem chi tiết'));

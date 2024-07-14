@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/main.dart';
+import 'package:tsport_mobile_app/models/account_details.dart';
 import 'package:tsport_mobile_app/screens/home_screen.dart';
 import 'package:tsport_mobile_app/screens/login_screen.dart';
 import 'package:tsport_mobile_app/screens/profile_order_screen.dart';
+import 'package:tsport_mobile_app/services/account_service.dart';
 import 'package:tsport_mobile_app/services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -16,6 +18,23 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isHovered = false;
+  AccountDetails? _account;
+  bool isAuthenticated = (Supabase.instance.client.auth.currentUser != null);
+
+  @override
+  void initState() {
+    super.initState();
+    if (isAuthenticated) {
+      fetchProfileInfo();
+    }
+  }
+
+  Future fetchProfileInfo() async {
+    final account = await AccountService().fetchCustomerProfileInfo();
+    setState(() {
+      _account = account;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       const Text('Hồ sơ nguời dùng',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
       const SizedBox(height: 20),
-      const Text('abc@gmail.com',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      Text('${_account?.email}',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
       const SizedBox(height: 20),
       profileContent()
     ]);
@@ -84,21 +103,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context) => const ProfileOrderScreen()),
             );
           },
-          child: const Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   children: [
-                    Text('Đơn hàng của tôi',
+                    const Text('Đơn hàng của tôi',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20)),
-                    Text('5 đơn hàng',
-                        style: TextStyle(color: Colors.grey, fontSize: 15))
+                    Text('${_account?.orders.length} đơn hàng',
+                        style: const TextStyle(color: Colors.grey, fontSize: 15))
                   ],
                 ),
-                Icon(Icons.arrow_forward_ios_rounded, size: 20)
+                const Icon(Icons.arrow_forward_ios_rounded, size: 20)
               ],
             ),
           ),

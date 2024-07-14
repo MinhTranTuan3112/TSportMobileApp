@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tsport_mobile_app/models/account_details.dart';
+import 'package:tsport_mobile_app/services/account_service.dart';
 
 import '../widgets/order_card.dart';
 import '../widgets/order_status_button.dart';
@@ -11,20 +14,43 @@ class ProfileOrderScreen extends StatefulWidget {
 }
 
 class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
+  AccountDetails? _account;
+
+  bool isAuthenticated = (Supabase.instance.client.auth.currentUser != null);
+
+  @override
+  void initState() {
+    super.initState();
+    if (isAuthenticated) {
+      fetchProfileInfo();
+    }
+  }
+
+  Future fetchProfileInfo() async {
+    final account = await AccountService().fetchCustomerProfileInfo();
+    setState(() {
+      _account = account;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: const Text('Đơn hàng của tôi',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          statusBar(),
-          const SizedBox(height: 20),
-          orderList()
-        ],
-      ),
+      body: bodyContent(),
+    );
+  }
+
+  Widget bodyContent() {
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        statusBar(),
+        const SizedBox(height: 20),
+        orderList()
+      ],
     );
   }
 
@@ -39,8 +65,18 @@ class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
   }
 
   Widget orderList() {
-    return const Column(
-      children: [OrderCard(), OrderCard()],
+    // Check if the orders list is not empty
+    if (_account?.orders != null && _account!.orders.isNotEmpty) {
+      return Column(
+        children: [
+          // Map through the orders and display them
+          ..._account!.orders.map((order) => OrderCard(order: order)),
+        ],
+      );
+    }
+    // Display "No order" text if the orders list is empty
+    return const Center(
+      child: Text('Không có đơn hàng nào'),
     );
   }
 }

@@ -20,11 +20,10 @@ class _CartsScreenState extends State<CartsScreen> {
   Future<void> fetchCartInfo() async {
     var orderInCart = await OrderService().fetchCartInfo();
 
-    if (mounted) {
-      setState(() {
-        _orderInCart = orderInCart;
-      });
-    }
+    setState(() {
+      _orderInCart = orderInCart;
+    });
+    
   }
 
   @override
@@ -65,6 +64,7 @@ class _CartsScreenState extends State<CartsScreen> {
 
     final response =
         await OrderService().fetchConfirmOrder(_orderInCart!.id, requests);
+
     if (response.statusCode == 200) {
       if (mounted) {
         showDialog(

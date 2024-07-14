@@ -1,7 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:tsport_mobile_app/models/order_details_info.dart';
+import 'package:tsport_mobile_app/services/order_service.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
-  const OrderDetailsScreen({super.key});
+import '../widgets/shirt_card_order_details.dart';
+
+class OrderDetailsScreen extends StatefulWidget {
+  final int orderId;
+  const OrderDetailsScreen({super.key, required this.orderId});
+
+  @override
+  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
+}
+
+class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  OrderDetailsInfo? _order;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchOrderDetailsInfo();
+  }
+
+  Future fetchOrderDetailsInfo() async {
+    final order = await OrderService().fetchOrderDetailsInfo(widget.orderId);
+    setState(() {
+      _order = order;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +48,8 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   Widget bottomInfoContent() {
-    return const Column(
-      children: [Text('Tổng tiền: 300.000 VNĐ')],
+    return Column(
+      children: [Text('Tổng tiền: ${_order?.total} VNĐ')],
     );
   }
 
@@ -43,71 +68,43 @@ class OrderDetailsScreen extends StatelessWidget {
             ),
           ]),
       child: Column(children: [
-        Row(
-          children: [
-            Image.network(
-                'https://product.hstatic.net/1000341630/product/hong-nam6745_da517aea17ca4a0491ed4ba8931a6f5a_master.jpg',
-                height: 100,
-                width: 100),
-            const SizedBox(width: 5),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Áo thể thao...',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                  ),
-                  SizedBox(height: 3),
-                  Text(
-                    'Câu lạc bộ...',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  SizedBox(height: 3),
-                  Text('Size: XL'),
-                  SizedBox(height: 3),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Số lượng: 3'),
-                      SizedBox(width: 70),
-                      Text('100.000 VNĐ', style: TextStyle(color: Colors.red),)
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        )
+        ..._order?.orderDetails.map((orderDetail) {
+          return ShirtCardOrderDetails(orderDetail: orderDetail);
+        }).toList() ?? []
       ]),
     );
   }
 
   Widget infoContent() {
-    return const Padding(
-      padding: EdgeInsets.all(10.0),
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Mã đơn: 12345'),
+              Text('Mã đơn: ${_order?.id}'),
               Text(
-                '12-02-2021',
-                style: TextStyle(color: Colors.grey),
+                '${_order?.orderDate}',
+                style: const TextStyle(color: Colors.grey),
               ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Số lượng áo: 3'), Text('(Trạng thái)')],
+            children: [
+              Text('Số lượng áo: ${_order?.orderDetails.length}'),
+              const Text('(Trạng thái)')
+            ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Được đặt bởi abc@gmail.com'), Text('')],
+            children: [
+              Text('Được đặt bởi ${_order?.createdAccount.email}'),
+              const Text('')
+            ],
           )
         ],
       ),
