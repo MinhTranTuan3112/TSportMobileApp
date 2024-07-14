@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/screens/carts_screen.dart';
 import 'package:tsport_mobile_app/screens/home_screen.dart';
 import 'package:tsport_mobile_app/screens/profile_screen.dart';
@@ -16,6 +17,7 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
+
   final List<Widget> widgets = const [
     HomeScreen(),
     ShirtsScreen(),
@@ -31,6 +33,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Supabase.instance.client.auth.currentUser;
+    bool isAuthenticated = (user != null);
+
     return Scaffold(
       appBar: MainAppBar.appBar(),
       body: Center(child: widgets.elementAt(_selectedIndex)),
@@ -53,6 +58,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
+            if (index == 2 && !isAuthenticated) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Vui lòng đăng nhập để xem giỏ hàng'),
+                ),
+              );
+              return;
+            }
             _selectedIndex = index;
           });
         },

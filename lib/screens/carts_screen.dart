@@ -29,13 +29,13 @@ class _CartsScreenState extends State<CartsScreen> {
   @override
   void initState() {
     super.initState();
-    final user = Supabase.instance.client.auth.currentUser;
-    bool isAuthenticated = (user != null);
-    if (!isAuthenticated && mounted) {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
-      return;
-    }
+    // final user = Supabase.instance.client.auth.currentUser;
+    // bool isAuthenticated = (user != null);
+    // if (!isAuthenticated && mounted) {
+    //   Navigator.pushReplacement(context,
+    //       MaterialPageRoute(builder: (context) => const LoginScreen()));
+    //   return;
+    // }
     fetchCartInfo();
   }
 

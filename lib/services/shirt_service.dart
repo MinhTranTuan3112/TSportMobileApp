@@ -30,6 +30,7 @@ class ShirtService {
       double? startPrice,
       double? endPrice,
       List<int> selectedClubsIds,
+      List<int> selectedSeasonIds,
       {String sortOption = ""}) async {
     final client = CustomClient({});
 
@@ -48,6 +49,12 @@ class ShirtService {
     if (selectedClubsIds.isNotEmpty) {
       for (int clubId in selectedClubsIds) {
         url += '&clubId=$clubId';
+      }
+    }
+
+    if (selectedSeasonIds.isNotEmpty) {
+      for (int seasonId in selectedSeasonIds) {
+        url += '&seasonId=$seasonId';
       }
     }
 
