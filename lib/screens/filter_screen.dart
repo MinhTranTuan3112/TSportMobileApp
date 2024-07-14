@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:tsport_mobile_app/models/club_filter.dart';
 import 'package:tsport_mobile_app/models/shirt_filter_data.dart';
+import 'package:tsport_mobile_app/services/club_service.dart';
 import 'package:tsport_mobile_app/utils/price_utils.dart';
 
 class FilterScreen extends StatefulWidget {
   final List<String> selectedSize;
   final double? selectedStartPrice;
   final double? selectedEndPrice;
-  const FilterScreen({super.key, required this.selectedSize, this.selectedStartPrice, this.selectedEndPrice});
+  final List<int> selectedClubsIds;
+
+  const FilterScreen(
+      {super.key,
+      required this.selectedSize,
+      this.selectedStartPrice,
+      this.selectedEndPrice,
+      required this.selectedClubsIds});
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -14,6 +24,9 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   RangeValues currentRangeValues = const RangeValues(0, 500000);
+
+  List<ClubFilter> _clubs = [];
+
   var sizes = [
     'S',
     'M',
@@ -22,7 +35,7 @@ class _FilterScreenState extends State<FilterScreen> {
     'XXL',
   ];
 
-  var isSelected = {
+  var sizeSelectedMap = {
     'S': false,
     'M': false,
     'L': false,
@@ -30,15 +43,35 @@ class _FilterScreenState extends State<FilterScreen> {
     'XXL': false
   };
 
+  Map<int, bool> clubSelectedMap = {};
+
   @override
   void initState() {
     super.initState();
     for (var size in widget.selectedSize) {
-      isSelected[size] = true;
+      sizeSelectedMap[size] = true;
     }
 
     if (widget.selectedStartPrice != null && widget.selectedEndPrice != null) {
-      currentRangeValues = RangeValues(widget.selectedStartPrice!, widget.selectedEndPrice!);
+      currentRangeValues =
+          RangeValues(widget.selectedStartPrice!, widget.selectedEndPrice!);
+    }
+
+    fetchClubsFilter();
+  }
+
+  Future fetchClubsFilter() async {
+    final clubs = await ClubService().fetchClubsFilters();
+    setState(() {
+      _clubs = clubs;
+    });
+
+    for (var club in _clubs) {
+      if (widget.selectedClubsIds.contains(club.id)) {
+        clubSelectedMap[club.id] = true;
+        continue;
+      }
+      clubSelectedMap[club.id] = false;
     }
   }
 
@@ -53,6 +86,8 @@ class _FilterScreenState extends State<FilterScreen> {
           priceFilterSection(),
           sizeFilterSection(),
           const SizedBox(height: 20),
+          clubsFilterSection(),
+          const SizedBox(height: 20),
           applyButton()
         ],
       ),
@@ -64,14 +99,20 @@ class _FilterScreenState extends State<FilterScreen> {
       width: double.infinity,
       child: ElevatedButton(
           onPressed: () {
-            var selectedSizes = isSelected.entries
+            var selectedSizes = sizeSelectedMap.entries
                 .where((e) => e.value == true)
                 .map((e) => e.key)
                 .toList();
+
+            var selectedClubsIds = clubSelectedMap.entries
+                .where((e) => e.value == true)
+                .map((e) => e.key)
+                .toList();
+
             var startPrice = currentRangeValues.start.round().toDouble();
             var endPrice = currentRangeValues.end.round().toDouble();
 
-            var filterData = ShirtFilterData(sizes: selectedSizes);
+            var filterData = ShirtFilterData(sizes: selectedSizes, selectedClubsIds: selectedClubsIds);
 
             if (startPrice < endPrice) {
               filterData.startPrice = startPrice;
@@ -123,11 +164,58 @@ class _FilterScreenState extends State<FilterScreen> {
             children: sizes.map((String size) {
               return ChoiceChip(
                 label: Text(size),
-                selected: isSelected[size] ?? false,
+                selected: sizeSelectedMap[size] ?? false,
                 selectedColor: Colors.red,
                 onSelected: (bool selected) {
                   setState(() {
-                    isSelected[size] = selected;
+                    sizeSelectedMap[size] = selected;
+                  });
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget clubsFilterSection() {
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 10),
+          margin: const EdgeInsets.only(top: 20),
+          child: const Text(
+            'Câu lạc bộ',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3))
+              ]),
+          child: Wrap(
+            spacing: 10,
+            children: _clubs.map((ClubFilter club) {
+              return ChoiceChip(
+                label: Text(club.name),
+                selected: clubSelectedMap[club.id] ?? false,
+                selectedColor: Colors.red,
+                onSelected: (bool selected) {
+                  setState(() {
+                    clubSelectedMap[club.id] = selected;
                   });
                 },
                 shape: RoundedRectangleBorder(

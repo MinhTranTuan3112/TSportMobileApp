@@ -31,6 +31,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
   static const _pageSize = 4;
   List<String> _selectedSizes = [];
   double? _startPrice, _endPrice;
+  List<int> _selectedClubIds = [];
 
   Future _showFilterScreenAndFetchSizes() async {
     // final selectedSizes = await Navigator.push(
@@ -49,12 +50,14 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
                   selectedSize: _selectedSizes,
                   selectedStartPrice: _startPrice,
                   selectedEndPrice: _endPrice,
+                  selectedClubsIds: _selectedClubIds,
                 )));
 
     if (filterData != null) {
       _selectedSizes = filterData.sizes;
       _startPrice = filterData.startPrice;
       _endPrice = filterData.endPrice;
+      _selectedClubIds = filterData.selectedClubsIds;
       _pagingController.refresh();
     }
   }
@@ -79,6 +82,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
       final shirtService = ShirtService();
       final newItems = await shirtService.fetchShirts(
           pageKey, _pageSize, _selectedSizes, _startPrice, _endPrice,
+          _selectedClubIds,
           sortOption: sortOption);
 
       final isLastPage = newItems.length < _pageSize;

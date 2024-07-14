@@ -23,8 +23,13 @@ class ShirtService {
     return response;
   }
 
-  Future<List<ShirtItem>> fetchShirts(int pageKey, int pageSize,
-      List<String> sizes, double? startPrice, double? endPrice,
+  Future<List<ShirtItem>> fetchShirts(
+      int pageKey,
+      int pageSize,
+      List<String> sizes,
+      double? startPrice,
+      double? endPrice,
+      List<int> selectedClubsIds,
       {String sortOption = ""}) async {
     final client = CustomClient({});
 
@@ -37,6 +42,12 @@ class ShirtService {
         if (i != sizes.length - 1) {
           url += '&sizes=';
         }
+      }
+    }
+
+    if (selectedClubsIds.isNotEmpty) {
+      for (int clubId in selectedClubsIds) {
+        url += '&clubId=$clubId';
       }
     }
 
