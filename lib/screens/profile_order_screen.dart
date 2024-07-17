@@ -7,6 +7,8 @@ import 'package:tsport_mobile_app/models/paged_order.dart';
 import 'package:tsport_mobile_app/models/pagedresult.dart';
 import 'package:tsport_mobile_app/services/account_service.dart';
 import 'package:tsport_mobile_app/services/order_service.dart';
+import '../widgets/empty_indicator.dart';
+import '../widgets/error_indicator.dart';
 import '../widgets/order_card.dart';
 import '../widgets/order_status_button.dart';
 // ignore: depend_on_referenced_packages
@@ -20,10 +22,10 @@ class ProfileOrderScreen extends StatefulWidget {
 }
 
 class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
-  BasicAccount? _account;
   final PagingController<int, PagedOrder> _pagingController =
       PagingController(firstPageKey: 1);
   static const _pageSize = 4;
+  String _orderStatus = "Pending";
 
   bool isAuthenticated = (Supabase.instance.client.auth.currentUser != null);
 
@@ -43,36 +45,17 @@ class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
     super.dispose();
   }
 
-  Future fetchProfileInfo() async {
+  Future fetchPagedOrders(int pageKey, [String? orderStatus]) async {
     final account = await AccountService().fetchBasicAccountInfo();
+    
     setState(() {
-      _account = account;
+      _orderStatus = orderStatus ?? _orderStatus;
     });
-  }
 
-  // Future fetchPagedOrders(int pageKey) async {
-  //   try {
-  //     final orderService = OrderService();
-  //     final newItems = await orderService.fetchOrders(
-  //         pageKey, _pageSize, _account?.id, null);
-
-  //     return newItems;
-  //   } catch (error) {
-  //     final errorMessage =
-  //         error is HttpException ? error.message : 'An unknown error occurred';
-  //     return [];
-  //   }
-  // }
-
-  Future fetchPagedOrders(int pageKey) async {
-    final account = await AccountService().fetchBasicAccountInfo();
-    setState(() {
-      _account = account;
-    });
     try {
       final orderService = OrderService();
-      final newItems =
-          await orderService.fetchOrders(pageKey, _pageSize, account?.id, null);
+      final newItems = await orderService.fetchOrders(
+          pageKey, _pageSize, account?.id, _orderStatus);
 
       final isLastPage = newItems.length < _pageSize;
 
@@ -87,6 +70,15 @@ class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
           error is HttpException ? error.message : 'An unknown error occurred';
       _pagingController.error = errorMessage;
     }
+  }
+
+  void updateOrderStatusAndRefresh(String? status) {
+
+    setState(() {
+      _orderStatus = status ?? _orderStatus; // Update the order status
+    });
+
+    _pagingController.refresh(); // Trigger a refresh of the orders list
   }
 
   @override
@@ -111,26 +103,24 @@ class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
   }
 
   Widget statusBar() {
-    final statuses = ["Đã giao", "Đang giao", "Đã hủy"];
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ...statuses.map((status) => OrderStatusButton(status: status)),
-      ],
+    final statuses = ["Pending", "Confirmed"];
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ...statuses.map((status) => OrderStatusButton(
+                status: status,
+                isActive: _orderStatus == status,
+                onPressed: () => updateOrderStatusAndRefresh(status),
+              )),
+        ],
+      ),
     );
   }
 
   Widget orderList() {
-    // // Check if the orders list is not empty
-    // if (_account?.orders != null && _account!.orders.isNotEmpty) {
-    //   return Column(
-    //     children: [
-    //       // Map through the orders and display them
-    //       ..._account!.orders.map((order) => OrderCard(order: order)),
-    //     ],
-    //   );
-    // }
-
+    
     if (isAuthenticated) {
       return Expanded(
         child: PagedListView<int, PagedOrder>(
@@ -141,7 +131,7 @@ class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
               message: 'Failed to load orders',
               onTryAgain: () => _pagingController.refresh(),
             ),
-            noItemsFoundIndicatorBuilder: (context) => const EmptyIndicator(),
+            noItemsFoundIndicatorBuilder: (context) => const EmptyIndicator(message: 'Không có đơn hàng',),
           ),
         ),
       );
@@ -149,42 +139,6 @@ class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
 
     return const Center(
       child: Text('Không có đơn hàng nào'),
-    );
-  }
-}
-
-class ErrorIndicator extends StatelessWidget {
-  final String message;
-  final VoidCallback onTryAgain;
-
-  const ErrorIndicator(
-      {required this.message, required this.onTryAgain, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: onTryAgain,
-            child: const Text('Try Again'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class EmptyIndicator extends StatelessWidget {
-  const EmptyIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('No items found'),
     );
   }
 }

@@ -8,6 +8,8 @@ import 'package:tsport_mobile_app/screens/filter_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:tsport_mobile_app/services/shirt_service.dart';
+import 'package:tsport_mobile_app/widgets/empty_indicator.dart';
+import 'package:tsport_mobile_app/widgets/error_indicator.dart';
 import 'package:tsport_mobile_app/widgets/shirt_card.dart';
 
 class ShirtsScreen extends StatefulWidget {
@@ -136,7 +138,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
             message: 'Failed to load shirts',
             onTryAgain: () => _pagingController.refresh(),
           ),
-          noItemsFoundIndicatorBuilder: (context) => const EmptyIndicator(),
+          noItemsFoundIndicatorBuilder: (context) => const EmptyIndicator(message: 'Không tìm thấy áo nào.',),
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -344,42 +346,6 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
           ),
         )
       ],
-    );
-  }
-}
-
-class ErrorIndicator extends StatelessWidget {
-  final String message;
-  final VoidCallback onTryAgain;
-
-  const ErrorIndicator(
-      {required this.message, required this.onTryAgain, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: onTryAgain,
-            child: const Text('Try Again'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class EmptyIndicator extends StatelessWidget {
-  const EmptyIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('No items found'),
     );
   }
 }

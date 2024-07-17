@@ -47,14 +47,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget authenticatedContent() {
-    return Column(
-      children: [
-        Text('Chào mừng ${_account?.email} đến với TSport'),
-        const SizedBox(height: 20),
-        signOutButton(),
-        profileSection()
-      ],
-    );
+    return (_account == null)
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            children: [
+              Text('Chào mừng ${_account?.email} đến với TSport'),
+              const SizedBox(height: 20),
+              signOutButton(),
+              profileSection()
+            ],
+          );
   }
 
   Widget profileSection() {

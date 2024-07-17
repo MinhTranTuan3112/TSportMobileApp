@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tsport_mobile_app/models/account_details.dart';
 import 'package:tsport_mobile_app/models/paged_order.dart';
 import 'package:tsport_mobile_app/screens/order_details_screen.dart';
+import 'package:tsport_mobile_app/screens/shirts_screen.dart';
 
 class OrderCard extends StatefulWidget {
   final PagedOrder order;
@@ -34,21 +35,17 @@ class _OrderCardState extends State<OrderCard> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Id: ${widget.order.id}'),
-                Text('${widget.order.orderDate}',
-                    style: const TextStyle(color: Colors.grey))
-              ],
-            ),
+            Text('Mã đơn: ${widget.order.code}'),
+            const SizedBox(height: 10),
+            Text('Ngày đặt: ${widget.order.orderDate}',
+                style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Text('Số lượng: ${widget.order.orderDetails.length}'),
                 const Text(''),
-                Text('Tổng: ${widget.order.total}',
+                Text('Tổng: ${formatPrice(widget.order.total)} VNĐ',
                     style: const TextStyle(color: Colors.red))
               ],
             ),

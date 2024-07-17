@@ -28,8 +28,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
   int _current = 0;
   ShirtDetails? _shirt;
   final List<String> _sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-// Step 2: Create a variable to hold the currently selected size
-  String? _selectedSize; // Default to 'M' or any size you prefer
+  String? _selectedSize;
   final TextEditingController _quantityController = TextEditingController();
 
   @override
@@ -38,8 +37,10 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
       appBar: AppBar(
         title: const Text('Chi tiết áo'),
       ),
-      body: mainContent(),
-      bottomNavigationBar: addToCartButton(),
+      body: _shirt == null
+          ? const Center(child: CircularProgressIndicator())
+          : mainContent(),
+      bottomNavigationBar: addToCartContent(),
     );
   }
 
@@ -63,7 +64,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
     });
   }
 
-  Widget addToCartButton() {
+  Widget addToCartContent() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
@@ -139,6 +140,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                               }
 
                               final bool? confirmed = await showDialog<bool>(
+                                // ignore: use_build_context_synchronously
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
@@ -285,36 +287,38 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
   }
 
   Widget imagesCarousel() {
-    return Column(
-      children: [
-        CarouselSlider.builder(
-          itemCount: _shirt?.images.length,
-          options: CarouselOptions(
-              height: 400,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              }),
-          itemBuilder: (context, index, realIdx) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Image.network(_shirt?.images[index].url ?? '',
-                  fit: BoxFit.cover),
-            );
-          },
-        ),
-        Slider(
-            value: _current.toDouble(),
-            min: 0,
-            max: _shirt!.images.length.toDouble() - 1,
-            onChanged: (double value) {
-              setState(() {
-                _current = value.round();
-              });
-            }),
-      ],
-    );
+    return _shirt?.images != []
+        ? Column(
+            children: [
+              CarouselSlider.builder(
+                itemCount: _shirt?.images.length,
+                options: CarouselOptions(
+                    height: 400,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    }),
+                itemBuilder: (context, index, realIdx) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Image.network(_shirt?.images[index].url ?? '',
+                        fit: BoxFit.cover),
+                  );
+                },
+              ),
+              Slider(
+                  value: _current.toDouble(),
+                  min: 0,
+                  max: _shirt!.images.length.toDouble() - 1,
+                  onChanged: (double value) {
+                    setState(() {
+                      _current = value.round();
+                    });
+                  }),
+            ],
+          )
+        : const SizedBox();
   }
 }
