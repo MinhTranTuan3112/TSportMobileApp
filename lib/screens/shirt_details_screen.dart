@@ -36,7 +36,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Áo đấu'),
+        title: const Text('Chi tiết áo'),
       ),
       body: mainContent(),
       bottomNavigationBar: addToCartButton(),
@@ -233,34 +233,38 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    Text(
-                      _shirt!.name,
+                if (_shirt?.shirtEdition?.discountPrice != null) ...[
+                  Text.rich(
+                    TextSpan(
+                      text: '${_shirt?.shirtEdition?.stockPrice} VNĐ',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 25),
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
                     ),
-                    Text(
-                      'Mùa giải: ${_shirt!.seasonPlayer!.season.name}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                  const SizedBox(
+                      width: 10), // Space between stockPrice and discountPrice
+                  Text(
+                    '${_shirt?.shirtEdition?.discountPrice} VNĐ',
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                     ),
-                    Text(
-                      'Câu lạc bộ: ${_shirt!.seasonPlayer!.season.club!.name}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                ] else ...[
+                  Text(
+                    '${_shirt?.shirtEdition?.stockPrice} VNĐ',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                     ),
-                    Text(
-                      'Cầu thủ: ${_shirt!.seasonPlayer!.player.name}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
-                    )
-                  ],
-                ),
-                Text(
-                  '${_shirt?.shirtEdition?.discountPrice} VNĐ',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 25),
-                )
+                  ),
+                ],
               ],
             ),
           ),
@@ -268,11 +272,13 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Text(
-              '${_shirt?.description}',
+              '${_shirt?.name}',
               textAlign: TextAlign.justify,
               style: const TextStyle(),
             ),
           ),
+          const SizedBox(height: 10),
+          Text('Câu lạc bộ: ${_shirt?.seasonPlayer?.season.club?.name}')
         ],
       ),
     );

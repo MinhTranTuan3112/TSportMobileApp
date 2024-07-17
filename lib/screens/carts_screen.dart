@@ -23,7 +23,6 @@ class _CartsScreenState extends State<CartsScreen> {
     setState(() {
       _orderInCart = orderInCart;
     });
-    
   }
 
   @override
@@ -54,6 +53,32 @@ class _CartsScreenState extends State<CartsScreen> {
   }
 
   Future handleOrderSubmit() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Xác nhận'),
+          content: const Text('Xác nhận đặt hàng?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context).pop(false), // User presses "No"
+              child: const Text('Không'),
+            ),
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context).pop(true), // User presses "Yes"
+              child: const Text('Có'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != null && confirmed == false) {
+      return;
+    }
+    
     final requests = _orderInCart!.orderDetails.map((od) {
       return AddToCartRequest(
           // Assuming AddToCartRequest takes parameters like productId and quantity

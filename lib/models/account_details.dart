@@ -1,38 +1,43 @@
+import 'package:tsport_mobile_app/models/order_in_cart.dart';
+
 class AccountDetails {
-  final int id;
+  int id;
   String? username;
-  final String email;
+  String email;
+  String password;
   String? firstName;
   String? lastName;
   String? gender;
   String? address;
   String? phone;
   Dob? dob;
-  final String supabaseId;
-  final String role;
-  String? status;
-  List<Order> orders;
+  String supabaseId;
+  String role;
+  String status;
+  List<OrderCreatedAccount> orderCreatedAccounts;
 
   AccountDetails({
     required this.id,
     this.username,
     required this.email,
+    required this.password,
     this.firstName,
     this.lastName,
-    required this.gender,
-    required this.address,
+    this.gender,
+    this.address,
     required this.phone,
     this.dob,
     required this.supabaseId,
     required this.role,
-    this.status,
-    required this.orders,
+    required this.status,
+    required this.orderCreatedAccounts,
   });
 
   factory AccountDetails.fromJson(Map<String, dynamic> json) => AccountDetails(
         id: json['id'],
         username: json['username'],
         email: json['email'],
+        password: json['password'],
         firstName: json['first-name'],
         lastName: json['last-name'],
         gender: json['gender'],
@@ -42,7 +47,11 @@ class AccountDetails {
         supabaseId: json['supabase-id'],
         role: json['role'],
         status: json['status'],
-        orders: json['order-created-accounts'] != null && json['order-created-accounts'] != [] ? List<Order>.from(json['order-created-accounts'].map((x) => Order.fromJson(x))) : [],
+        orderCreatedAccounts: json['order-created-accounts'] != null &&
+                json['order-created-accounts'] != []
+            ? List<OrderCreatedAccount>.from(json['order-created-accounts']
+                .map((x) => OrderCreatedAccount.fromJson(x)))
+            : [],
       );
 }
 
@@ -73,38 +82,65 @@ class Dob {
       );
 }
 
-class Order {
+class OrderCreatedAccount {
   int id;
   String? code;
   DateTime orderDate;
   String status;
   double total;
+  DateTime createdDate;
+  int createdAccountId;
+  DateTime? modifiedDate;
+  int? modifiedAccountId;
   List<OrderDetail> orderDetails;
+  List<Payment> payments;
 
-  Order({
+  OrderCreatedAccount({
     required this.id,
-    this.code,
+    required this.code,
     required this.orderDate,
     required this.status,
     required this.total,
+    required this.createdDate,
+    required this.createdAccountId,
+    this.modifiedDate,
+    this.modifiedAccountId,
     required this.orderDetails,
+    required this.payments,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) => Order(
+  factory OrderCreatedAccount.fromJson(Map<String, dynamic> json) =>
+      OrderCreatedAccount(
         id: json['id'],
         code: json['code'],
         orderDate: DateTime.parse(json['order-date']),
         status: json['status'],
         total: json['total'].toDouble(),
-        orderDetails: List<OrderDetail>.from(
-            json['order-details'].map((x) => OrderDetail.fromJson(x))),
+        createdDate: DateTime.parse(json['created-date']),
+        createdAccountId: json['created-account-id'],
+        modifiedDate: json['modified-date'] != null
+            ? DateTime.parse(json['modified-date'])
+            : null,
+        modifiedAccountId: json['modified-account-id'] != null
+            ? int.parse(json['modified-account-id'])
+            : null,
+        orderDetails:
+            json['order-details'] != null && json['order-details'] != []
+                ? List<OrderDetail>.from(
+                    json['order-details'].map((x) => OrderDetail.fromJson(x)))
+                : [],
+        payments: json['payments'] != null && json['payments'] != []
+            ? List<Payment>.from(
+                json['payments'].map((x) => Payment.fromJson(x)))
+            : [],
       );
 }
 
+// Include OrderDetail, Payment, and any other classes as needed based on the JSON structure.
 class OrderDetail {
   int orderId;
   int shirtId;
-  String? code;
+  String code;
   String size;
   double subtotal;
   int quantity;
@@ -114,7 +150,7 @@ class OrderDetail {
   OrderDetail({
     required this.orderId,
     required this.shirtId,
-    this.code,
+    required this.code,
     required this.size,
     required this.subtotal,
     required this.quantity,
@@ -127,7 +163,7 @@ class OrderDetail {
         shirtId: json['shirt-id'],
         code: json['code'],
         size: json['size'],
-        subtotal: (json['subtotal'] as num).toDouble(),
+        subtotal: json['subtotal'].toDouble(),
         quantity: json['quantity'],
         status: json['status'],
         shirt: Shirt.fromJson(json['shirt']),
@@ -136,39 +172,166 @@ class OrderDetail {
 
 class Shirt {
   int id;
+  String code;
   String name;
-  String description;
-  ShirtEdition shirtEdition;
+  String? description;
+  int? quantity;
+  String status;
+  int shirtEditionId;
+  int seasonPlayerId;
+  DateTime createdDate;
+  int createdAccountId;
+  DateTime? modifiedDate;
+  int? modifiedAccountId;
+  List<ShirtImage> images;
+  ShirtEdition? shirtEdition;
 
   Shirt({
     required this.id,
+    required this.code,
     required this.name,
-    required this.description,
-    required this.shirtEdition,
+    this.description,
+    this.quantity,
+    required this.status,
+    required this.shirtEditionId,
+    required this.seasonPlayerId,
+    required this.createdDate,
+    required this.createdAccountId,
+    this.modifiedDate,
+    this.modifiedAccountId,
+    required this.images,
+    this.shirtEdition,
   });
 
   factory Shirt.fromJson(Map<String, dynamic> json) => Shirt(
         id: json['id'],
+        code: json['code'],
         name: json['name'],
         description: json['description'],
-        shirtEdition: ShirtEdition.fromJson(json['shirt-edition']),
+        quantity: json['quantity'],
+        status: json['status'],
+        shirtEditionId: json['shirt-edition-id'],
+        seasonPlayerId: json['season-player-id'],
+        createdDate: DateTime.parse(json['created-date']),
+        createdAccountId: json['created-account-id'],
+        modifiedDate: json['modified-date'] != null
+            ? DateTime.parse(json['modified-date'])
+            : null,
+        modifiedAccountId: json['modified-account-id'] != null
+            ? int.parse(json['modified-account-id'])
+            : null,
+        images: json['images'] != null && json['images'] != []
+            ? List<ShirtImage>.from(
+                json['images'].map((x) => ShirtImage.fromJson(x)))
+            : [],
+        shirtEdition: json['shirt-edition'] != null
+            ? ShirtEdition.fromJson(json['shirt-edition'])
+            : null,
       );
 }
 
 class ShirtEdition {
-  String code;
-  String color;
-  String origin;
+  final int id;
+  final String code;
+  final String size;
+  final bool? hasSignature;
+  final double stockPrice;
+  final double? discountPrice;
+  final String? color;
+  final String? status;
+  final String? origin;
+  final int quantity;
+  final String? material;
+  final int seasonId;
+  final DateTime createdDate;
+  final int createdAccountId;
+  DateTime? modifiedDate;
+  int? modifiedAccountId;
 
   ShirtEdition({
+    required this.id,
     required this.code,
-    required this.color,
-    required this.origin,
+    required this.size,
+    this.hasSignature,
+    required this.stockPrice,
+    this.discountPrice,
+    this.color,
+    this.status,
+    this.origin,
+    required this.quantity,
+    this.material,
+    required this.seasonId,
+    required this.createdDate,
+    required this.createdAccountId,
+    this.modifiedDate,
+    this.modifiedAccountId,
   });
 
-  factory ShirtEdition.fromJson(Map<String, dynamic> json) => ShirtEdition(
+  factory ShirtEdition.fromJson(Map<String, dynamic> json) {
+    return ShirtEdition(
+      id: json['id'],
+      code: json['code'],
+      size: json['size'],
+      hasSignature: json['has-signature'],
+      stockPrice: json['stock-price'],
+      discountPrice: json['discount-price'],
+      color: json['color'],
+      status: json['status'],
+      origin: json['origin'],
+      quantity: json['quantity'],
+      material: json['material'],
+      seasonId: json['season-id'],
+      createdDate: DateTime.parse(json['created-date']),
+      createdAccountId: json['created-account-id'],
+      modifiedDate: json['modified-date'] != null
+          ? DateTime.parse(json['modified-date'])
+          : null, // Handling nullable DateTime
+      modifiedAccountId: json['modified-account-id'] != null
+          ? int.parse(json['modified-account-id'])
+          : null,
+    );
+  }
+}
+
+class Payment {
+  int id;
+  String? code;
+  String? paymentMethod;
+  String? paymentName;
+  String status;
+  int? orderId;
+  DateTime createdDate;
+  int createdAccountId;
+  DateTime? modifiedDate;
+  int? modifiedAccountId;
+
+  Payment({
+    required this.id,
+    this.code,
+    this.paymentMethod,
+    this.paymentName,
+    required this.status,
+    this.orderId,
+    required this.createdDate,
+    required this.createdAccountId,
+    this.modifiedDate,
+    this.modifiedAccountId,
+  });
+
+  factory Payment.fromJson(Map<String, dynamic> json) => Payment(
+        id: json['id'],
         code: json['code'],
-        color: json['color'],
-        origin: json['origin'],
+        paymentMethod: json['payment-method'],
+        paymentName: json['payment-name'],
+        status: json['status'],
+        orderId: json['order-id'] != null ? int.parse(json['order-id']) : null,
+        createdDate: DateTime.parse(json['created-date']),
+        createdAccountId: json['created-account-id'],
+        modifiedDate: json['modified-date'] != null
+            ? DateTime.parse(json['modified-date'])
+            : null, // Handling nullable DateTime
+        modifiedAccountId: json['modified-account-id'] != null
+            ? int.parse(json['modified-account-id'])
+            : null,
       );
 }

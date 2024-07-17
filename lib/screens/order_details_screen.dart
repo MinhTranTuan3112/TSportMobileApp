@@ -95,7 +95,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Số lượng áo: ${_order?.orderDetails.length}'),
-              const Text('(Trạng thái)')
+              Text('Trạng thái: ${_order?.status}')
             ],
           ),
           const SizedBox(height: 10),

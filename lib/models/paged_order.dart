@@ -24,16 +24,16 @@ class PagedOrder {
   factory PagedOrder.fromJson(Map<String, dynamic> json) => PagedOrder(
         id: json['id'],
         code: json['code'],
-        orderDate: DateTime.parse(json['orderDate']),
+        orderDate: DateTime.parse(json['order-date']),
         status: json['status'],
         total: json['total'].toDouble(),
-        createdDate: DateTime.parse(json['createdDate']),
-        createdAccountId: json['createdAccountId'],
-        modifiedDate: json['modifiedDate'] != null
-            ? DateTime.parse(json['modifiedDate'])
+        createdDate: DateTime.parse(json['created-date']),
+        createdAccountId: json['created-account-id'],
+        modifiedDate: json['modified-date'] != null
+            ? DateTime.parse(json['modified-date'])
             : null,
-        modifiedAccountId: json['modifiedAccountId'] != null
-            ? int.parse(json['modifiedAccountId'])
+        modifiedAccountId: json['modified-account-id'] != null
+            ? int.parse(json['modified-account-id'])
             : null,
       );
 }

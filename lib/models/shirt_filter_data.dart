@@ -4,9 +4,12 @@ class ShirtFilterData {
   double? endPrice;
   List<int> selectedClubsIds;
   List<int> selectedSeasonIds;
+  List<int> selectedPlayerIds;
 
-  ShirtFilterData({List<String>? sizes, this.startPrice, this.endPrice, List<int>? selectedClubsIds, List<int>? selectedSeasonIds})
+  ShirtFilterData({List<String>? sizes, this.startPrice, this.endPrice, List<int>? selectedClubsIds, List<int>? selectedSeasonIds,
+  List<int>? selectedPlayerIds})
       : sizes = sizes ?? [],
         selectedClubsIds = selectedClubsIds ?? [],
-        selectedSeasonIds = selectedSeasonIds ?? [];
+        selectedSeasonIds = selectedSeasonIds ?? [],
+        selectedPlayerIds = selectedPlayerIds ?? [];
 }

@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tsport_mobile_app/models/account_details.dart';
 import 'package:tsport_mobile_app/models/add_to_cart_request.dart';
 import 'package:tsport_mobile_app/models/order_details_info.dart';
 import 'package:tsport_mobile_app/models/order_in_cart.dart';
@@ -98,7 +99,8 @@ class OrderService {
     throw Exception('Failed to fetch order details info');
   }
 
-  Future<PagedResult<PagedOrder>> fetchPagedOrders(
+  Future<List<PagedOrder>> fetchOrders(
+      int pageKey, int pageSize,
       int? createdAccountId, String? status) async {
     final session = Supabase.instance.client.auth.currentSession;
     var token = session?.accessToken;
@@ -106,10 +108,10 @@ class OrderService {
       "Authorization": "Bearer $token",
     });
 
-    var url = '/orders';
+    var url = '/orders?pageNumber=$pageKey&pageSize=$pageSize';
 
     if (createdAccountId != null) {
-      url += '?created-account-id=$createdAccountId';
+      url += '&createdAccountId=$createdAccountId';
     }
 
     if (status != null) {
@@ -124,13 +126,16 @@ class OrderService {
       final pagedResult =
           PagedResult<PagedOrder>.fromJson(jsonResponse, PagedOrder.fromJson);
 
+      final orders = pagedResult.items;
+
       client.close();
 
-      return pagedResult;
+      return orders;
     }
 
     client.close();
 
     throw Exception('Failed to fetch paged orders');
   }
+
 }

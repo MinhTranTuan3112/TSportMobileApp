@@ -33,6 +33,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
   double? _startPrice, _endPrice;
   List<int> _selectedClubIds = [];
   List<int> _selectedSeasonIds = [];
+  List<int> _selectedPlayerIds = [];
 
   Future _showFilterScreenAndFetchSizes() async {
     // final selectedSizes = await Navigator.push(
@@ -53,6 +54,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
                   selectedEndPrice: _endPrice,
                   selectedClubsIds: _selectedClubIds,
                   selectedSeasonIds: _selectedSeasonIds,
+                  selectedPlayerIds: _selectedPlayerIds,
                 )));
 
     if (filterData != null) {
@@ -61,6 +63,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
       _endPrice = filterData.endPrice;
       _selectedClubIds = filterData.selectedClubsIds;
       _selectedSeasonIds = filterData.selectedSeasonIds;
+      _selectedPlayerIds = filterData.selectedPlayerIds;
       _pagingController.refresh();
     }
   }
@@ -84,9 +87,14 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
       // Replace this with your actual data fetching logic
       final shirtService = ShirtService();
       final newItems = await shirtService.fetchShirts(
-          pageKey, _pageSize, _selectedSizes, _startPrice, _endPrice,
+          pageKey,
+          _pageSize,
+          _selectedSizes,
+          _startPrice,
+          _endPrice,
           _selectedClubIds,
           _selectedSeasonIds,
+          _selectedPlayerIds,
           sortOption: sortOption);
 
       final isLastPage = newItems.length < _pageSize;

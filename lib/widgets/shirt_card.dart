@@ -22,7 +22,7 @@ class ShirtCard extends StatelessWidget {
         child: Column(
           children: [
             Image.network(
-              height: 200,
+              height: 180,
               width: 200,
               fit: BoxFit.cover,
               shirt.images.firstWhereOrNull((_) => true)?.url ??

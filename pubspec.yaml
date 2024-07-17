@@ -78,6 +78,7 @@ flutter:
     - assets/icons/sport-team-shirt-svgrepo-com.svg
     - assets/images/app_logo.png
     - assets/icons/google.svg
+    - fonts/BeVietnamPro-Italic.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future fetchProfileInfo() async {
-    final account = await AccountService().fetchCustomerProfileInfo();
+    final account = await AccountService().fetchDetailsCustomerProfileInfo();
     setState(() {
       _account = account;
     });
@@ -43,13 +43,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return !isAuthenticated
         ? unauthenticatedContent(context)
-        : authenticatedContent(user);
+        : authenticatedContent();
   }
 
-  Widget authenticatedContent(User user) {
+  Widget authenticatedContent() {
     return Column(
       children: [
-        Text('Chào mừng ${user.email} đến với TSport'),
+        Text('Chào mừng ${_account?.email} đến với TSport'),
         const SizedBox(height: 20),
         signOutButton(),
         profileSection()
@@ -103,21 +103,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context) => const ProfileOrderScreen()),
             );
           },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+          child: const Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   children: [
-                    const Text('Đơn hàng của tôi',
+                    Text('Đơn hàng của tôi',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20)),
-                    Text('${_account?.orders.length} đơn hàng',
-                        style: const TextStyle(color: Colors.grey, fontSize: 15))
+                    // Text('${_account?.orders.length} đơn hàng',
+                    //     style: const TextStyle(color: Colors.grey, fontSize: 15))
                   ],
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded, size: 20)
+                Icon(Icons.arrow_forward_ios_rounded, size: 20)
               ],
             ),
           ),

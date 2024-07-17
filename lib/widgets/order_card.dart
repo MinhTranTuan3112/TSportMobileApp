@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tsport_mobile_app/models/account_details.dart';
+import 'package:tsport_mobile_app/models/paged_order.dart';
 import 'package:tsport_mobile_app/screens/order_details_screen.dart';
 
 class OrderCard extends StatefulWidget {
-  final Order order;
+  final PagedOrder order;
   const OrderCard({
     super.key,
     required this.order,
@@ -45,7 +46,8 @@ class _OrderCardState extends State<OrderCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Số lượng: ${widget.order.orderDetails.length}'),
+                // Text('Số lượng: ${widget.order.orderDetails.length}'),
+                const Text(''),
                 Text('Tổng: ${widget.order.total}',
                     style: const TextStyle(color: Colors.red))
               ],
