@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/main.dart';
 import 'package:tsport_mobile_app/models/account_details.dart';
+import 'package:tsport_mobile_app/models/basic_account.dart';
 import 'package:tsport_mobile_app/screens/home_screen.dart';
 import 'package:tsport_mobile_app/screens/login_screen.dart';
 import 'package:tsport_mobile_app/screens/profile_order_screen.dart';
@@ -18,7 +19,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isHovered = false;
-  AccountDetails? _account;
+  BasicAccount? _account;
   bool isAuthenticated = (Supabase.instance.client.auth.currentUser != null);
 
   @override
@@ -30,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future fetchProfileInfo() async {
-    final account = await AccountService().fetchDetailsCustomerProfileInfo();
+    final account = await AccountService().fetchBasicAccountInfo();
     setState(() {
       _account = account;
     });
@@ -49,23 +50,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget authenticatedContent() {
     return (_account == null)
         ? const Center(child: CircularProgressIndicator())
-        : Column(
-            children: [
-              Text('Chào mừng ${_account?.email} đến với TSport'),
-              const SizedBox(height: 20),
-              signOutButton(),
-              profileSection()
-            ],
-          );
+        : Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+              children: [
+                profileSection(),
+                const SizedBox(height: 20),
+                signOutButton()
+              ],
+            ),
+        );
   }
 
   Widget profileSection() {
     return Column(children: [
-      const Text('Hồ sơ nguời dùng',
+      const Text('TSport Xin Chào',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
       const SizedBox(height: 20),
       Text('${_account?.email}',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       const SizedBox(height: 20),
       profileContent()
     ]);

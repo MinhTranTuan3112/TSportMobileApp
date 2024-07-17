@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsport_mobile_app/models/order_details_info.dart';
 import 'package:tsport_mobile_app/services/order_service.dart';
+import 'package:tsport_mobile_app/utils/order_utils.dart';
 
 import '../widgets/shirt_card_order_details.dart';
 
@@ -69,8 +70,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           ]),
       child: Column(children: [
         ..._order?.orderDetails.map((orderDetail) {
-          return ShirtCardOrderDetails(orderDetail: orderDetail);
-        }).toList() ?? []
+              return ShirtCardOrderDetails(orderDetail: orderDetail);
+            }).toList() ??
+            []
       ]),
     );
   }
@@ -95,7 +97,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Số lượng áo: ${_order?.orderDetails.length}'),
-              Text('Trạng thái: ${_order?.status}')
+              Text(
+                  'Trạng thái: ${OrderUtils.getStatusLabel(_order?.status ?? "")}')
             ],
           ),
           const SizedBox(height: 10),

@@ -99,29 +99,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                         children: [
                           const Text('Size'),
                           const SizedBox(width: 10),
-                          DropdownButton<String>(
-                            value: _selectedSize,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            style: const TextStyle(color: Colors.red),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.red,
-                            ),
-                            onChanged: (String? newValue) {
-                              // Update the state to reflect the new selected size
-                              setState(() {
-                                _selectedSize = newValue;
-                              });
-                            },
-                            items: _sizes
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
+                          sizeSelect(),
                         ],
                       ),
                       Center(
@@ -185,6 +163,32 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
         child: const Text('THÊM VÀO GIỎ HÀNG'),
       ),
     );
+  }
+
+  DropdownButton<String> sizeSelect() {
+    return DropdownButton<String>(
+                          value: _selectedSize,
+                          icon: const Icon(Icons.arrow_downward),
+                          elevation: 16,
+                          style: const TextStyle(color: Colors.red),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.red,
+                          ),
+                          onChanged: (String? newValue) {
+                            // Update the state to reflect the new selected size
+                            setState(() {
+                              _selectedSize = newValue;
+                            });
+                          },
+                          items: _sizes
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        );
   }
 
   Future<void> handleAddToCart(BuildContext context) async {

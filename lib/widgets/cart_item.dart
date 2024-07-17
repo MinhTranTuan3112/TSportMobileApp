@@ -51,18 +51,12 @@ class _CartItemState extends State<CartItem> {
                           )
                         ],
                       ),
-                      // SizedBox(width: 20),
-                      // Row(
-                      //   children: [
-                      //     Text('Màu sắc: '),
-                      //     Text(
-                      //       'Đỏ',
-                      //       style: TextStyle(fontWeight: FontWeight.bold),
-                      //     )
-                      //   ],
-                      // )
                     ],
                   ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                          'Đơn giá: ${widget.orderDetail.shirt.shirtEdition.discountPrice ?? widget.orderDetail.shirt.shirtEdition.stockPrice} VNĐ')),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,

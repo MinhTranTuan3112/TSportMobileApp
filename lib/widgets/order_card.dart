@@ -3,6 +3,7 @@ import 'package:tsport_mobile_app/models/account_details.dart';
 import 'package:tsport_mobile_app/models/paged_order.dart';
 import 'package:tsport_mobile_app/screens/order_details_screen.dart';
 import 'package:tsport_mobile_app/screens/shirts_screen.dart';
+import 'package:tsport_mobile_app/utils/order_utils.dart';
 
 class OrderCard extends StatefulWidget {
   final PagedOrder order;
@@ -54,7 +55,7 @@ class _OrderCardState extends State<OrderCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 detailsButton(widget.order.id),
-                Text('Trạng thái: ${widget.order.status}')
+                Text('Trạng thái: ${OrderUtils.getStatusLabel(widget.order.status)}')
               ],
             )
           ],

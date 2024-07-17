@@ -6,8 +6,8 @@ class EmptyIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('No items found'),
+    return Center(
+      child: Text(message),
     );
   }
 }

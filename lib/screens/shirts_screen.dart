@@ -99,6 +99,8 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
           _selectedPlayerIds,
           sortOption: sortOption);
 
+      if (!mounted) return; // Check if the widget is still mounted
+
       final isLastPage = newItems.length < _pageSize;
 
       if (isLastPage) {
@@ -138,7 +140,9 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
             message: 'Failed to load shirts',
             onTryAgain: () => _pagingController.refresh(),
           ),
-          noItemsFoundIndicatorBuilder: (context) => const EmptyIndicator(message: 'Không tìm thấy áo nào.',),
+          noItemsFoundIndicatorBuilder: (context) => const EmptyIndicator(
+            message: 'Không tìm thấy áo nào.',
+          ),
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

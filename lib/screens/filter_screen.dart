@@ -125,16 +125,24 @@ class _FilterScreenState extends State<FilterScreen> {
       appBar: AppBar(
         title: const Text('Bộ lọc'),
       ),
-      body: Column(
-        children: [
-          priceFilterSection(),
-          sizeFilterSection(),
-          const SizedBox(height: 20),
-          clubsFilterSection(),
-          const SizedBox(height: 20),
-          seasonFilterSection(),
-          applyButton()
-        ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Column(
+            children: [
+              priceFilterSection(),
+              sizeFilterSection(),
+              const SizedBox(height: 20),
+              clubsFilterSection(),
+              const SizedBox(height: 20),
+              seasonFilterSection(),
+              const SizedBox(height: 20),
+              playerFilterSection(),
+              const SizedBox(height: 20),
+              applyButton()
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -208,6 +216,7 @@ class _FilterScreenState extends State<FilterScreen> {
         ),
         const SizedBox(height: 10),
         Container(
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
@@ -255,6 +264,7 @@ class _FilterScreenState extends State<FilterScreen> {
         ),
         const SizedBox(height: 10),
         Container(
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
@@ -302,6 +312,7 @@ class _FilterScreenState extends State<FilterScreen> {
         ),
         const SizedBox(height: 10),
         Container(
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
@@ -349,6 +360,7 @@ class _FilterScreenState extends State<FilterScreen> {
         ),
         const SizedBox(height: 10),
         Container(
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),

@@ -3,7 +3,7 @@ class OrderInCart {
   String? code;
   DateTime orderDate;
   String status;
-  int total;
+  double total;
   DateTime createdDate;
   int createdAccountId;
   DateTime? modifiedDate;
@@ -28,7 +28,7 @@ class OrderInCart {
         code: json['code'],
         orderDate: DateTime.parse(json['order-date']),
         status: json['status'],
-        total: json['total'],
+        total: (json['total'] as num).toDouble(),
         createdDate: DateTime.parse(json['created-date']),
         createdAccountId: json['created-account-id'],
         modifiedDate: json['modified-date'] == null
