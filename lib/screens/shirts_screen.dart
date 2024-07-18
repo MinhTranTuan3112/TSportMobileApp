@@ -120,7 +120,7 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // categoryBar(),
+        //  categoryBar(),
         const SizedBox(
           height: 10,
         ),
@@ -129,13 +129,39 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
       ],
     );
   }
-
-  Widget shirtsView() {
-    return Expanded(
+Widget shirtsView() {
+  return Expanded(
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
       child: PagedGridView<int, ShirtItem>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<ShirtItem>(
-          itemBuilder: (context, item, index) => ShirtCard(shirt: item),
+          itemBuilder: (context, item, index) => Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // Set the background color for each grid item
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: ShirtCard(shirt: item),
+          ),
           firstPageErrorIndicatorBuilder: (context) => ErrorIndicator(
             message: 'Failed to load shirts',
             onTryAgain: () => _pagingController.refresh(),
@@ -151,8 +177,10 @@ class _ShirtsScreenState extends State<ShirtsScreen> {
           mainAxisSpacing: 10,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget filterRow(BuildContext context) {
     return Row(

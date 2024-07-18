@@ -9,7 +9,9 @@ final images = [
   "https://i.postimg.cc/5NB1R1L8/welcome-banner.jpg",
   "https://product.hstatic.net/1000341630/product/hong-nam6745_da517aea17ca4a0491ed4ba8931a6f5a_master.jpg",
   "https://product.hstatic.net/1000341630/product/hong-nam6780_66702964c0254425883c4c5f326f5ad5_master.jpg",
-  "https://product.hstatic.net/1000341630/product/da_nang_hong_c25ca2dcc9d7494aadd00bc6c0aa8a87_master.png"
+  "https://product.hstatic.net/1000341630/product/da_nang_hong_c25ca2dcc9d7494aadd00bc6c0aa8a87_master.png",
+  "https://static.vecteezy.com/system/resources/previews/000/834/768/original/beach-scene-summer-sale-banner-vector.jpg",
+  "https://store4.manutd.com/content/ws/all/a1648baa-f5a1-48b6-82ab-930af17202a5__1600X752.png"
 ];
 
 class HomeScreen extends StatelessWidget {
@@ -18,11 +20,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: EdgeInsets.all(0),
       child: Column(
         children: [
-       mainTopImage()  ,newCollection()   
+       mainTopImage() ,ShopNow() , 
         ],
-        
+       
       ),
     );
   }
@@ -67,14 +70,16 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-   Widget newCollection(){
+   Widget ShopNow(){
      return  GestureDetector(
       onTap: ()=> ShirtsScreen(),
-       child: 
-         Padding(padding: EdgeInsets.only(bottom: 300),child:Container(
+       child:
+         Padding(padding: EdgeInsets.all(100),
+                  child:Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[900],
                   borderRadius: BorderRadius.circular(12),
+                  shape: BoxShape.rectangle,
                 ),
                 padding: const EdgeInsets.all(10),
                 child: const Center(
@@ -87,23 +92,55 @@ class HomeScreen extends StatelessWidget {
      ); 
           
    }
+    Widget newCollection(){
+     return  
+         Padding(padding: EdgeInsets.all(5),
+           child: 
+             Container(
+              child: CarouselSlider(
+                     options: CarouselOptions(
+              aspectRatio: 2.0,
+              enlargeCenterPage: true,
+              scrollDirection: Axis.vertical,
+              autoPlay: true,
+                     ),
+                     items:images
+                .map((item) => Container(
+                      child: Center(
+                          child:
+                              Image.network(item, fit: BoxFit.cover, width: 1000)),
+                    ))
+                .toList(),
+                   )),
+           
+         );
+    
+       
+    
+          
+   }
   Widget mainTopImage() {
     return SizedBox(
+    
       width: double.infinity, // Make the container take the full screen width
       height:
           200, // Specify the height to ensure the Stack has a bounded height
-      child: Stack(
+      child: Column(
         children: [
-          Opacity(
-            opacity:1, // Adjust the opacity value as needed
-            child: Image.network(
+           Image.network(
               // 'https://bizweb.dktcdn.net/100/272/718/products/gkmu8.jpg?v=1648561904297'
               'https://i.postimg.cc/5NB1R1L8/welcome-banner.jpg',
               width: double.infinity,
-              fit: BoxFit
-                  .cover, // Cover the full width, maintaining aspect ratio
+              height: 200,
+               // Cover the full width, maintaining aspect ratio
             ),
-          ),
+          
+
+
+
+
+
+          
         // Container(
         //     decoration: BoxDecoration(
         //       color: Colors.grey[900],

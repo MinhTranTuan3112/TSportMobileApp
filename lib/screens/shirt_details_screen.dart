@@ -289,9 +289,11 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
             alignment: Alignment.centerLeft,
             child: Column(
               children: [
-                Text('Câu lạc bộ: ${_shirt?.seasonPlayer?.season.club?.name}'),
+                
+                
+                Text('CLUB: ${_shirt?.seasonPlayer?.season.club?.name}'),
                 const SizedBox(height: 10),
-                Text('Xuất xứ: ${_shirt?.shirtEdition?.origin}'),
+                Text('FROM: ${_shirt?.shirtEdition?.origin}'),
               ],
             ),
           )

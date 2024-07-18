@@ -12,7 +12,7 @@ class ShirtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Card(color: Colors.white,
       child: GestureDetector(
         onTap: () => {
           Navigator.push(
@@ -23,8 +23,8 @@ class ShirtCard extends StatelessWidget {
         child: Column(
           children: [
             Image.network(
-              height: 180,
-              width: 200,
+              height: 150,
+              width: 180,
               fit: BoxFit.cover,
               shirt.images.firstWhereOrNull((_) => true)?.url ??
                   'https://onlinetools.com/images/examples-onlineimagetools/empty-translucent-image.png',
@@ -45,7 +45,8 @@ class ShirtCard extends StatelessWidget {
             if (shirt.shirtEdition.discountPrice != null) ...[
               Text(
                 '${formatPrice(shirt.shirtEdition.stockPrice)} VNĐ',
-                style: const TextStyle(decoration: TextDecoration.lineThrough),
+                style: const TextStyle(decoration: TextDecoration.lineThrough,fontSize: 12),
+                
               ),
               const SizedBox(height: 10),
               Text(
@@ -53,6 +54,7 @@ class ShirtCard extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
+                  fontSize: 12
                 ),
               ),
             ] else ...[
