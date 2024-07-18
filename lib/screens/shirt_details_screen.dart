@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 import 'package:tsport_mobile_app/models/shirt_details.dart';
 import 'package:tsport_mobile_app/screens/login_screen.dart';
+import 'package:tsport_mobile_app/screens/shirts_screen.dart';
 import 'package:tsport_mobile_app/services/auth_service.dart';
 import 'package:tsport_mobile_app/services/order_service.dart';
 import 'package:tsport_mobile_app/services/shirt_service.dart';
@@ -167,28 +168,27 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
 
   DropdownButton<String> sizeSelect() {
     return DropdownButton<String>(
-                          value: _selectedSize,
-                          icon: const Icon(Icons.arrow_downward),
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.red),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.red,
-                          ),
-                          onChanged: (String? newValue) {
-                            // Update the state to reflect the new selected size
-                            setState(() {
-                              _selectedSize = newValue;
-                            });
-                          },
-                          items: _sizes
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        );
+      value: _selectedSize ?? sizes.first,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.red),
+      underline: Container(
+        height: 2,
+        color: Colors.red,
+      ),
+      onChanged: (String? newValue) {
+        // Update the state to reflect the new selected size
+        setState(() {
+          _selectedSize = newValue;
+        });
+      },
+      items: _sizes.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
   }
 
   Future<void> handleAddToCart(BuildContext context) async {
@@ -244,7 +244,8 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                 if (_shirt?.shirtEdition?.discountPrice != null) ...[
                   Text.rich(
                     TextSpan(
-                      text: '${_shirt?.shirtEdition?.stockPrice} VNĐ',
+                      text:
+                          '${formatPrice(_shirt?.shirtEdition?.stockPrice ?? 0)} VNĐ',
                       style: const TextStyle(
                         decoration: TextDecoration.lineThrough,
                         color: Colors.black,
@@ -255,7 +256,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                   const SizedBox(
                       width: 10), // Space between stockPrice and discountPrice
                   Text(
-                    '${_shirt?.shirtEdition?.discountPrice} VNĐ',
+                    '${formatPrice(_shirt?.shirtEdition?.discountPrice ?? 0)} VNĐ',
                     style: const TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -264,7 +265,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                   ),
                 ] else ...[
                   Text(
-                    '${_shirt?.shirtEdition?.stockPrice} VNĐ',
+                    '${formatPrice(_shirt?.shirtEdition?.stockPrice ?? 0)} VNĐ',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
@@ -280,11 +281,20 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
             child: Text(
               '${_shirt?.name}',
               textAlign: TextAlign.justify,
-              style: const TextStyle(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
           ),
           const SizedBox(height: 10),
-          Text('Câu lạc bộ: ${_shirt?.seasonPlayer?.season.club?.name}')
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              children: [
+                Text('Câu lạc bộ: ${_shirt?.seasonPlayer?.season.club?.name}'),
+                const SizedBox(height: 10),
+                Text('Xuất xứ: ${_shirt?.shirtEdition?.origin}'),
+              ],
+            ),
+          )
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:tsport_mobile_app/models/shirt.dart';
 import 'package:tsport_mobile_app/screens/shirt_details_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
+import 'package:tsport_mobile_app/screens/shirts_screen.dart';
 
 class ShirtCard extends StatelessWidget {
   final ShirtItem shirt;
@@ -41,16 +42,24 @@ class ShirtCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              '${shirt.shirtEdition.stockPrice} VNĐ',
-              style: const TextStyle(decoration: TextDecoration.lineThrough),
-            ),
-            const SizedBox(height: 10),
-            Text('${shirt.shirtEdition.discountPrice} VNĐ',
+            if (shirt.shirtEdition.discountPrice != null) ...[
+              Text(
+                '${formatPrice(shirt.shirtEdition.stockPrice)} VNĐ',
+                style: const TextStyle(decoration: TextDecoration.lineThrough),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '${formatPrice(shirt.shirtEdition.discountPrice ?? 0)} VNĐ',
                 style: const TextStyle(
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
-                ))
+                ),
+              ),
+            ] else ...[
+              Text(
+                '${formatPrice(shirt.shirtEdition.stockPrice)} VNĐ',
+              ),
+            ],
           ],
         ),
       ),

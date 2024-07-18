@@ -8,7 +8,9 @@ import 'package:flutter/foundation.dart' show kIsWeb; // Import kIsWeb
 class CustomClient extends http.BaseClient {
   final Map<String, String> headers;
   final http.Client _inner = http.Client();
-  final String baseUrl;
+  final String baseUrl; 
+  //4G: 192.168.126.177
+  //Wifi: 192.168.100.4
 
    CustomClient(this.headers)
       : baseUrl = kIsWeb ? "http://localhost:8080/api" : "http://192.168.100.4:8080/api";

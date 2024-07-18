@@ -121,6 +121,19 @@ class _CartsScreenState extends State<CartsScreen> {
     }
   }
 
+  double getShirtPrice(Shirt shirt) {
+    return shirt.shirtEdition.discountPrice ?? shirt.shirtEdition.stockPrice;
+  }
+
+  void updateOrderTotal() {
+    setState(() {
+      _orderInCart!.total = _orderInCart!.orderDetails.fold(
+          0,
+          (total, current) =>
+              total + (getShirtPrice(current.shirt) * current.quantity));
+    });
+  }
+
   Widget cartContent() {
     if (_orderInCart == null || _orderInCart!.orderDetails.isEmpty) {
       return const Text(
@@ -142,7 +155,7 @@ class _CartsScreenState extends State<CartsScreen> {
         // ),
         if (_orderInCart != null && _orderInCart!.orderDetails.isNotEmpty)
           ...List.generate(_orderInCart!.orderDetails.length, (index) {
-            return CartItem(orderDetail: _orderInCart!.orderDetails[index]);
+            return CartItem(orderDetail: _orderInCart!.orderDetails[index], onUpdateTotal: updateOrderTotal,);
           }),
         const SizedBox(height: 20),
 

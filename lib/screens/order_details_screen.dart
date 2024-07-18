@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsport_mobile_app/models/order_details_info.dart';
+import 'package:tsport_mobile_app/screens/shirts_screen.dart';
 import 'package:tsport_mobile_app/services/order_service.dart';
 import 'package:tsport_mobile_app/utils/order_utils.dart';
 
@@ -50,7 +51,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   Widget bottomInfoContent() {
     return Column(
-      children: [Text('Tổng tiền: ${_order?.total} VNĐ')],
+      children: [Text('Tổng tiền: ${formatPrice(_order?.total ?? 0)} VNĐ')],
     );
   }
 
