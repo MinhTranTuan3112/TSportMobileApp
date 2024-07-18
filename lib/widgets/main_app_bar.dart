@@ -32,25 +32,25 @@ class MainAppBar extends StatelessWidget {
                     const Text('TSport'),
                   ],
                 )),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                // margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.keyboard_arrow_left_rounded, size: 30),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.search),
-              ),
-            )
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Container(
+            //     // margin: const EdgeInsets.all(10),
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(10),
+            //     ),
+            //     child: const Icon(Icons.keyboard_arrow_left_rounded, size: 30),
+            //   ),
+            // ),
+            // Align(
+            //   alignment: Alignment.centerRight,
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(10),
+            //     ),
+            //     child: const Icon(Icons.search),
+            //   ),
+            // )
           ],
         ),
       ),

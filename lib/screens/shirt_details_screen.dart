@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 import 'package:tsport_mobile_app/models/shirt_details.dart';
 import 'package:tsport_mobile_app/screens/login_screen.dart';
+import 'package:tsport_mobile_app/screens/shirts_screen.dart';
 import 'package:tsport_mobile_app/services/auth_service.dart';
 import 'package:tsport_mobile_app/services/order_service.dart';
 import 'package:tsport_mobile_app/services/shirt_service.dart';
@@ -28,18 +29,19 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
   int _current = 0;
   ShirtDetails? _shirt;
   final List<String> _sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-// Step 2: Create a variable to hold the currently selected size
-  String? _selectedSize; // Default to 'M' or any size you prefer
+  String? _selectedSize;
   final TextEditingController _quantityController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Áo đấu'),
+        title: const Text('Chi tiết áo'),
       ),
-      body: mainContent(),
-      bottomNavigationBar: addToCartButton(),
+      body: _shirt == null
+          ? const Center(child: CircularProgressIndicator())
+          : mainContent(),
+      bottomNavigationBar: addToCartContent(),
     );
   }
 
@@ -63,7 +65,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
     });
   }
 
-  Widget addToCartButton() {
+  Widget addToCartContent() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
@@ -98,29 +100,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                         children: [
                           const Text('Size'),
                           const SizedBox(width: 10),
-                          DropdownButton<String>(
-                            value: _selectedSize,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            style: const TextStyle(color: Colors.red),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.red,
-                            ),
-                            onChanged: (String? newValue) {
-                              // Update the state to reflect the new selected size
-                              setState(() {
-                                _selectedSize = newValue;
-                              });
-                            },
-                            items: _sizes
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
+                          sizeSelect(),
                         ],
                       ),
                       Center(
@@ -139,6 +119,7 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                               }
 
                               final bool? confirmed = await showDialog<bool>(
+                                // ignore: use_build_context_synchronously
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
@@ -182,6 +163,31 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
                 WidgetStateProperty.all<Size>(const Size(double.infinity, 50))),
         child: const Text('THÊM VÀO GIỎ HÀNG'),
       ),
+    );
+  }
+
+  DropdownButton<String> sizeSelect() {
+    return DropdownButton<String>(
+      value: _selectedSize ?? sizes.first,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.red),
+      underline: Container(
+        height: 2,
+        color: Colors.red,
+      ),
+      onChanged: (String? newValue) {
+        // Update the state to reflect the new selected size
+        setState(() {
+          _selectedSize = newValue;
+        });
+      },
+      items: _sizes.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 
@@ -233,34 +239,39 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    Text(
-                      _shirt!.name,
+                if (_shirt?.shirtEdition?.discountPrice != null) ...[
+                  Text.rich(
+                    TextSpan(
+                      text:
+                          '${formatPrice(_shirt?.shirtEdition?.stockPrice ?? 0)} VNĐ',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 25),
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
                     ),
-                    Text(
-                      'Mùa giải: ${_shirt!.seasonPlayer!.season.name}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                  const SizedBox(
+                      width: 10), // Space between stockPrice and discountPrice
+                  Text(
+                    '${formatPrice(_shirt?.shirtEdition?.discountPrice ?? 0)} VNĐ',
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                     ),
-                    Text(
-                      'Câu lạc bộ: ${_shirt!.seasonPlayer!.season.club!.name}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                ] else ...[
+                  Text(
+                    '${formatPrice(_shirt?.shirtEdition?.stockPrice ?? 0)} VNĐ',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                     ),
-                    Text(
-                      'Cầu thủ: ${_shirt!.seasonPlayer!.player.name}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
-                    )
-                  ],
-                ),
-                Text(
-                  '${_shirt?.shirtEdition?.discountPrice} VNĐ',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 25),
-                )
+                  ),
+                ],
               ],
             ),
           ),
@@ -268,47 +279,60 @@ class _ShirtDetailsScreenState extends State<ShirtDetailsScreen> {
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Text(
-              '${_shirt?.description}',
+              '${_shirt?.name}',
               textAlign: TextAlign.justify,
-              style: const TextStyle(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
           ),
+          const SizedBox(height: 10),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              children: [
+                Text('Câu lạc bộ: ${_shirt?.seasonPlayer?.season.club?.name}'),
+                const SizedBox(height: 10),
+                Text('Xuất xứ: ${_shirt?.shirtEdition?.origin}'),
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 
   Widget imagesCarousel() {
-    return Column(
-      children: [
-        CarouselSlider.builder(
-          itemCount: _shirt?.images.length,
-          options: CarouselOptions(
-              height: 400,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              }),
-          itemBuilder: (context, index, realIdx) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Image.network(_shirt?.images[index].url ?? '',
-                  fit: BoxFit.cover),
-            );
-          },
-        ),
-        Slider(
-            value: _current.toDouble(),
-            min: 0,
-            max: _shirt!.images.length.toDouble() - 1,
-            onChanged: (double value) {
-              setState(() {
-                _current = value.round();
-              });
-            }),
-      ],
-    );
+    return _shirt?.images != []
+        ? Column(
+            children: [
+              CarouselSlider.builder(
+                itemCount: _shirt?.images.length,
+                options: CarouselOptions(
+                    height: 400,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    }),
+                itemBuilder: (context, index, realIdx) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Image.network(_shirt?.images[index].url ?? '',
+                        fit: BoxFit.cover),
+                  );
+                },
+              ),
+              Slider(
+                  value: _current.toDouble(),
+                  min: 0,
+                  max: _shirt!.images.length.toDouble() - 1,
+                  onChanged: (double value) {
+                    setState(() {
+                      _current = value.round();
+                    });
+                  }),
+            ],
+          )
+        : const SizedBox();
   }
 }

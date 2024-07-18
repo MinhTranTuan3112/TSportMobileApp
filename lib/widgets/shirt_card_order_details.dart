@@ -20,13 +20,13 @@ class _ShirtCardOrderDetailsState extends State<ShirtCardOrderDetails> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Image.network(
-            widget.orderDetail.shirt.images
-                    .firstWhereOrNull((_) => true)
-                    ?.url ??
-                'https://onlinetools.com/images/examples-onlineimagetools/empty-translucent-image.png',
-            height: 100,
-            width: 100),
+        // Image.network(
+        //     widget.orderDetail.shirt.images
+        //             .firstWhereOrNull((_) => true)
+        //             ?.url ??
+        //         'https://onlinetools.com/images/examples-onlineimagetools/empty-translucent-image.png',
+        //     height: 50,
+        //     width: 50),
         const SizedBox(width: 5),
         Padding(
           padding: const EdgeInsets.all(8.0),

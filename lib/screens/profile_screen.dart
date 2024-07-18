@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/main.dart';
 import 'package:tsport_mobile_app/models/account_details.dart';
+import 'package:tsport_mobile_app/models/basic_account.dart';
+import 'package:tsport_mobile_app/screens/basic_info_screen.dart';
 import 'package:tsport_mobile_app/screens/home_screen.dart';
 import 'package:tsport_mobile_app/screens/login_screen.dart';
 import 'package:tsport_mobile_app/screens/profile_order_screen.dart';
@@ -18,7 +21,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isHovered = false;
-  AccountDetails? _account;
+  BasicAccount? _account;
   bool isAuthenticated = (Supabase.instance.client.auth.currentUser != null);
 
   @override
@@ -30,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future fetchProfileInfo() async {
-    final account = await AccountService().fetchCustomerProfileInfo();
+    final account = await AccountService().fetchBasicAccountInfo();
     setState(() {
       _account = account;
     });
@@ -43,27 +46,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return !isAuthenticated
         ? unauthenticatedContent(context)
-        : authenticatedContent(user);
+        : authenticatedContent();
   }
 
-  Widget authenticatedContent(User user) {
-    return Column(
-      children: [
-        Text('Chào mừng ${user.email} đến với TSport'),
-        const SizedBox(height: 20),
-        signOutButton(),
-        profileSection()
-      ],
-    );
+  Widget authenticatedContent() {
+    return (_account == null)
+        ? const Center(child: CircularProgressIndicator())
+        : Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                profileSection(),
+                const SizedBox(height: 20),
+                signOutButton()
+              ],
+            ),
+          );
   }
 
   Widget profileSection() {
     return Column(children: [
-      const Text('Hồ sơ nguời dùng',
+      const Text('TSport Xin Chào',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
       const SizedBox(height: 20),
       Text('${_account?.email}',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       const SizedBox(height: 20),
       profileContent()
     ]);
@@ -72,8 +79,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget profileContent() {
     return Column(
       children: [
+        basicInfoSection(),
+        const SizedBox(height: 20),
         orderSection(),
       ],
+    );
+  }
+
+  Widget basicInfoSection() {
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          isHovered =
+              true; // You need to define a boolean state variable `isHovered`
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          isHovered = false;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        color: isHovered
+            ? Colors.grey.withOpacity(0.5)
+            : Colors.transparent, // Change background color on hover
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BasicInfoScreen()),
+            );
+          },
+          child: const Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text('Thông tin cá nhân',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20)),
+                    // Text('${_account?.orders.length} đơn hàng',
+                    //     style: const TextStyle(color: Colors.grey, fontSize: 15))
+                  ],
+                ),
+                Icon(Icons.arrow_forward_ios_rounded, size: 20)
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -103,21 +160,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context) => const ProfileOrderScreen()),
             );
           },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+          child: const Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   children: [
-                    const Text('Đơn hàng của tôi',
+                    Text('Đơn hàng của tôi',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20)),
-                    Text('${_account?.orders.length} đơn hàng',
-                        style: const TextStyle(color: Colors.grey, fontSize: 15))
+                    // Text('${_account?.orders.length} đơn hàng',
+                    //     style: const TextStyle(color: Colors.grey, fontSize: 15))
                   ],
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded, size: 20)
+                Icon(Icons.arrow_forward_ios_rounded, size: 20)
               ],
             ),
           ),
