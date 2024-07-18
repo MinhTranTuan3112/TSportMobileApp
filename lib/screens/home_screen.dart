@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tsport_mobile_app/screens/shirts_screen.dart';
+import 'package:tsport_mobile_app/widgets/bottom_navigation_bar.dart';
+import 'package:flutter/widgets.dart';
 
 final images = [
+  "https://i.postimg.cc/5NB1R1L8/welcome-banner.jpg",
   "https://product.hstatic.net/1000341630/product/hong-nam6745_da517aea17ca4a0491ed4ba8931a6f5a_master.jpg",
   "https://product.hstatic.net/1000341630/product/hong-nam6780_66702964c0254425883c4c5f326f5ad5_master.jpg",
   "https://product.hstatic.net/1000341630/product/da_nang_hong_c25ca2dcc9d7494aadd00bc6c0aa8a87_master.png"
@@ -16,12 +20,13 @@ class HomeScreen extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          mainTopImage(),
-          // extraImages()
+       mainTopImage()  ,newCollection()   
         ],
+        
       ),
     );
   }
+  
 
   Widget extraImages() {
     return Expanded(
@@ -62,42 +67,59 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
+   Widget newCollection(){
+     return  GestureDetector(
+      onTap: ()=> ShirtsScreen(),
+       child: 
+         Padding(padding: EdgeInsets.only(bottom: 300),child:Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(10),
+                child: const Center(
+                  child: Text('Shop now',
+                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:  16,
+                  )),
+                ), // Adjust the opacity value to make the image darker or lighter
+              )),
+       
+     ); 
+          
+   }
   Widget mainTopImage() {
     return SizedBox(
       width: double.infinity, // Make the container take the full screen width
       height:
-          250, // Specify the height to ensure the Stack has a bounded height
+          200, // Specify the height to ensure the Stack has a bounded height
       child: Stack(
         children: [
           Opacity(
-            opacity: 1, // Adjust the opacity value as needed
+            opacity:1, // Adjust the opacity value as needed
             child: Image.network(
-              'https://bizweb.dktcdn.net/100/272/718/products/gkmu8.jpg?v=1648561904297',
+              // 'https://bizweb.dktcdn.net/100/272/718/products/gkmu8.jpg?v=1648561904297'
+              'https://i.postimg.cc/5NB1R1L8/welcome-banner.jpg',
               width: double.infinity,
               fit: BoxFit
                   .cover, // Cover the full width, maintaining aspect ratio
             ),
           ),
-          Container(
-            color: Colors.black.withOpacity(
-                0.3), // Adjust the opacity value to make the image darker or lighter
-          ),
-          const Positioned(
-            bottom: 10, // Distance from the bottom
-            right: 10, // Distance from the right
-            child: Text(
-              'Bộ sưu tập mới',
-              style: TextStyle(
-                fontSize: 24, // Big text size
-                color: Colors.white, // Text color
-                fontWeight: FontWeight.bold, // Make the text bold
-              ),
-            ),
-          ),
+        // Container(
+        //     decoration: BoxDecoration(
+        //       color: Colors.grey[900],
+        //       borderRadius: BorderRadius.circular(12),
+        //     ),
+        //     padding: const EdgeInsets.all(25),
+        //     child: const Center(
+        //       child: Text('Shop now',
+        //       style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize:  16,
+        //       )),
+        //     ), // Adjust the opacity value to make the image darker or lighter
+        //   ),
+          
         ],
       ),
-    );
+     ); 
   }
 
   Widget carousel() {
