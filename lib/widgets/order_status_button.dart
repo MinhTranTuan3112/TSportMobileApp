@@ -19,7 +19,7 @@ class OrderStatusButton extends StatelessWidget {
           backgroundColor: isActive ? Colors.red : Colors.transparent),
       onPressed: onPressed,
       child: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(2.5),
         child: SizedBox(
           child: Text(getStatusLabel(status)),
         ),
@@ -29,12 +29,15 @@ class OrderStatusButton extends StatelessWidget {
 
   String getStatusLabel(String status) {
     String label = "";
-    switch (status) {
-      case "Pending":
+    switch (status.toLowerCase()) {
+      case "pending":
         label = "Đang chờ";
         break;
-      case "Confirmed":
+      case "processed":
         label = "Đã xác nhận";
+        break;
+      case "cancelled":
+        label = "Đã hủy";
         break;
       default:
         label = "Unknown";

@@ -46,11 +46,11 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     if (_account != null) {
       setState(() {
         _account = account;
-        firstNameController.text = _account?.firstName ?? '';
-        lastNameController.text = _account?.lastName ?? '';
-        addressController.text = _account?.address ?? '';
-        phoneController.text = _account?.phone ?? '';
-        _selectedGender = _account?.gender;
+        // firstNameController.text = _account?.firstName ?? '';
+        // lastNameController.text = _account?.lastName ?? '';
+        // addressController.text = _account?.address ?? '';
+        // phoneController.text = _account?.phone ?? '';
+        // _selectedGender = _account?.gender;
       });
     }
   }
@@ -81,24 +81,31 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
             children: [
               const SizedBox(height: 20),
               CustomTextField(
-                  textController: firstNameController,
-                  labelText: 'Họ',
-                  validator: null),
+                textController: firstNameController,
+                labelText: 'Họ',
+                validator: null,
+
+              ),
               const SizedBox(height: 10),
               CustomTextField(
-                  textController: lastNameController,
-                  labelText: 'Tên',
-                  validator: null),
+                textController: lastNameController,
+                labelText: 'Tên',
+                validator: null,
+
+              ),
               const SizedBox(height: 10),
               CustomTextField(
-                  textController: addressController,
-                  labelText: 'Địa chỉ',
-                  validator: null),
+                textController: addressController,
+                labelText: 'Địa chỉ',
+                validator: null,
+
+              ),
               const SizedBox(height: 10),
               CustomTextField(
-                  textController: phoneController,
-                  labelText: 'Số điện thoại',
-                  validator: null),
+                textController: phoneController,
+                labelText: 'Số điện thoại',
+                validator: null,
+              ),
               const SizedBox(height: 10),
               genderSelect(),
               const SizedBox(height: 20),
@@ -170,7 +177,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
         address: addressController.text,
         phone: phoneController.text,
       );
-      
+
       // Use a local variable to store the current context
       final BuildContext dialogContext = context;
 
@@ -198,14 +205,14 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
 
       if (confirmed != null && confirmed) {
         final response = await AccountService().updateCustomerInfo(request);
-        if (response.statusCode == 200) {
+        if (response.statusCode == 204) {
           showDialog(
             // ignore: use_build_context_synchronously
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('Lưu Thành công'),
-                content: const Text(''),
+                title: const Text('Thành công!'),
+                content: const Text('Lưu thông tin thành công!'),
                 actions: <Widget>[
                   TextButton(
                     child: const Text('OK'),

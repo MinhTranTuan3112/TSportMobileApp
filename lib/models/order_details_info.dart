@@ -167,6 +167,7 @@ class Payment {
   String? code;
   String? paymentMethod;
   String? paymentName;
+  double amount;
   String status;
   int? orderId;
   DateTime createdDate;
@@ -177,8 +178,9 @@ class Payment {
   Payment({
     required this.id,
     required this.code,
-    required this.paymentMethod,
-    required this.paymentName,
+    this.paymentMethod,
+    this.paymentName,
+    required this.amount,
     required this.status,
     required this.orderId,
     required this.createdDate,
@@ -192,6 +194,7 @@ class Payment {
         code: json['code'],
         paymentMethod: json['payment-method'],
         paymentName: json['payment-name'],
+        amount: json['amount'].toDouble(),
         status: json['status'],
         orderId: json['order-id'] != null ? int.parse(json['order-id']) : null,
         createdDate: DateTime.parse(json['created-date']),

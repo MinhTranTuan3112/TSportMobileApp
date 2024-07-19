@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tsport_mobile_app/models/add_to_cart_request.dart';
 import 'package:tsport_mobile_app/models/order_in_cart.dart';
@@ -134,6 +135,11 @@ class _CartsScreenState extends State<CartsScreen> {
     });
   }
 
+  Widget vnPayButton() {
+    return ElevatedButton(
+        onPressed: () {}, child: const Text('Thanh toán qua VNPay'));
+  }
+
   Widget cartContent() {
     if (_orderInCart == null || _orderInCart!.orderDetails.isEmpty) {
       return const Text(
@@ -155,7 +161,10 @@ class _CartsScreenState extends State<CartsScreen> {
         // ),
         if (_orderInCart != null && _orderInCart!.orderDetails.isNotEmpty)
           ...List.generate(_orderInCart!.orderDetails.length, (index) {
-            return CartItem(orderDetail: _orderInCart!.orderDetails[index], onUpdateTotal: updateOrderTotal,);
+            return CartItem(
+              orderDetail: _orderInCart!.orderDetails[index],
+              onUpdateTotal: updateOrderTotal,
+            );
           }),
         const SizedBox(height: 20),
 
@@ -165,6 +174,9 @@ class _CartsScreenState extends State<CartsScreen> {
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         )),
 
+        const SizedBox(height: 10),
+        // vnPayButton(),
+        const SizedBox(height: 10),
         ElevatedButton(
             onPressed: () async {
               await handleOrderSubmit();

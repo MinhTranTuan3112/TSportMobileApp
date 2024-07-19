@@ -9,11 +9,14 @@ class CustomClient extends http.BaseClient {
   final Map<String, String> headers;
   final http.Client _inner = http.Client();
   final String baseUrl; 
+  final String deployBaseUrl = "https://tsportapi.azurewebsites.net/api";
+  final String localPort = "http://localhost:7091/api";
   //4G: 192.168.126.177
   //Wifi: 192.168.100.4
+  //Deploy: https://tsportapi.azurewebsites.net/
 
    CustomClient(this.headers)
-      : baseUrl = kIsWeb ? "http://localhost:8080/api" : "http://192.168.100.4:8080/api";
+      : baseUrl = kIsWeb ? "http://localhost:8080/api" : "https://tsportapi.azurewebsites.net/api";
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {

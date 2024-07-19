@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
-  const CustomTextField(
-      {super.key,
-      required this.textController,
-      required this.labelText,
-      this.validator});
+  const CustomTextField({
+    super.key,
+    required this.textController,
+    required this.labelText,
+    this.validator,
+  });
   final TextEditingController textController;
   final String labelText;
   final String? Function(String?)? validator;

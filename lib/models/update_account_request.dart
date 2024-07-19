@@ -9,8 +9,8 @@ class UpdateAccountRequest {
       {this.firstName, this.lastName, this.gender, this.address, this.phone});
 
   Map<String, dynamic> toJson() => {
-        "first_name": firstName,
-        "last_name": lastName,
+        "first-name": firstName,
+        "last-name": lastName,
         "gender": gender,
         "address": address,
         "phone": phone,

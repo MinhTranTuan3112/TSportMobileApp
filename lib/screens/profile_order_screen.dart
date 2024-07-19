@@ -103,7 +103,7 @@ class _ProfileOrderScreenState extends State<ProfileOrderScreen> {
   }
 
   Widget statusBar() {
-    final statuses = ["Pending", "Confirmed"];
+    final statuses = ["Pending", "Processed", "Cancelled"];
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
